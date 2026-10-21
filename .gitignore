@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Virtual environments
+.venv/
+venv/
+
+# Environment configuration and secrets
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+
+# Build artifacts
+build/
+dist/
+.coverage
+htmlcov/
+
+# Local AI model files
+models/
+*.gguf
+*.safetensors
+
+# Logs
+*.log
+logs/
