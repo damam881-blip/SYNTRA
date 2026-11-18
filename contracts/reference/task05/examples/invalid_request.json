@@ -1,0 +1,18 @@
+{
+  "contract_version": "1.0.0",
+  "error_id": "019a5000-0000-7000-8000-000000000050",
+  "project_id": "019a5000-0000-7000-8000-000000000001",
+  "test_id": null,
+  "error_class": "REFERENCE_INVALID",
+  "code": "UNKNOWN_DESTINATION_DEVICE",
+  "message_key": "errors.ping.unknown_destination_device",
+  "details": [
+    {
+      "field_path": "destination_device_id",
+      "reason_key": "not_found_in_project",
+      "observed_value": "019a5000-0000-7000-8000-00000000005a"
+    }
+  ],
+  "snapshot_ref": null,
+  "retryable": false
+}

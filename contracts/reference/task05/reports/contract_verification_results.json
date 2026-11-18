@@ -1,0 +1,469 @@
+{
+  "source": "RECONSTRUCTED REFERENCE; NOT original source bundle",
+  "positive_examples": 10,
+  "negative_mutations": 48,
+  "passed": 58,
+  "failed": 0,
+  "results": [
+    {
+      "test_id": "positive:invalid_request",
+      "expected": "ACCEPT",
+      "status": "PASS",
+      "reason": []
+    },
+    {
+      "test_id": "positive:ping_command",
+      "expected": "ACCEPT",
+      "status": "PASS",
+      "reason": []
+    },
+    {
+      "test_id": "positive:ping_failure_no_arp",
+      "expected": "ACCEPT",
+      "status": "PASS",
+      "reason": []
+    },
+    {
+      "test_id": "positive:ping_failure_zero_sent",
+      "expected": "ACCEPT",
+      "status": "PASS",
+      "reason": []
+    },
+    {
+      "test_id": "positive:ping_incomplete_safety",
+      "expected": "ACCEPT",
+      "status": "PASS",
+      "reason": []
+    },
+    {
+      "test_id": "positive:ping_observation_truncated",
+      "expected": "ACCEPT",
+      "status": "PASS",
+      "reason": []
+    },
+    {
+      "test_id": "positive:ping_partial_success",
+      "expected": "ACCEPT",
+      "status": "PASS",
+      "reason": []
+    },
+    {
+      "test_id": "positive:ping_rt05_return_route_failure",
+      "expected": "ACCEPT",
+      "status": "PASS",
+      "reason": []
+    },
+    {
+      "test_id": "positive:ping_self_local",
+      "expected": "ACCEPT",
+      "status": "PASS",
+      "reason": []
+    },
+    {
+      "test_id": "positive:ping_success",
+      "expected": "ACCEPT",
+      "status": "PASS",
+      "reason": []
+    },
+    {
+      "test_id": "negative:unsupported_version",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '2.0.0', 'command_id': '019a5000-0000-7000-8000-00000000001"
+      ]
+    },
+    {
+      "test_id": "negative:unknown_field",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'command_id': '019a5000-0000-7000-8000-00000000001"
+      ]
+    },
+    {
+      "test_id": "negative:bad_uuid",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'command_id': '019a5000-0000-7000-8000-00000000001"
+      ]
+    },
+    {
+      "test_id": "negative:bad_snapshot_digest_format",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'command_id': '019a5000-0000-7000-8000-00000000001"
+      ]
+    },
+    {
+      "test_id": "negative:snapshot_project_mismatch",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "snapshot-project"
+      ]
+    },
+    {
+      "test_id": "negative:negative_time",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'test_id': '019a5000-0000-7000-8000-000000000014',"
+      ]
+    },
+    {
+      "test_id": "negative:fractional_ns",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'test_id': '019a5000-0000-7000-8000-000000000014',"
+      ]
+    },
+    {
+      "test_id": "negative:invalid_event_phase",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'test_id': '019a5000-0000-7000-8000-000000000014',"
+      ]
+    },
+    {
+      "test_id": "negative:bad_aggregate",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "aggregate"
+      ]
+    },
+    {
+      "test_id": "negative:bad_started_count",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "started-count"
+      ]
+    },
+    {
+      "test_id": "negative:bad_sent_counter",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "sent-counter"
+      ]
+    },
+    {
+      "test_id": "negative:bad_loss",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "loss-percentage"
+      ]
+    },
+    {
+      "test_id": "negative:zero_sent_loss_nonnull",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "loss-percentage"
+      ]
+    },
+    {
+      "test_id": "negative:bad_rtt",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "rtt-min",
+        "rtt-sum",
+        "rtt-avg"
+      ]
+    },
+    {
+      "test_id": "negative:missing_match_event",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "hop-event-reference"
+      ]
+    },
+    {
+      "test_id": "negative:duplicate_match",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "match-event-kind-seq",
+        "match-time",
+        "duplicate-matched-reply"
+      ]
+    },
+    {
+      "test_id": "negative:ghost_sequence",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "started-count",
+        "matched-counter",
+        "sent-counter"
+      ]
+    },
+    {
+      "test_id": "negative:incomplete_aggregate",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "incomplete-outcome"
+      ]
+    },
+    {
+      "test_id": "negative:incomplete_observation",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "incomplete-outcome"
+      ]
+    },
+    {
+      "test_id": "negative:nonconsecutive_sequence",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "sequence-order",
+        "match-event-kind-seq"
+      ]
+    },
+    {
+      "test_id": "negative:incorrect_deadline",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "deadline",
+        "request-time"
+      ]
+    },
+    {
+      "test_id": "negative:overlap_attempts",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "request-time",
+        "attempt-nonoverlap"
+      ]
+    },
+    {
+      "test_id": "negative:two_primary",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "multiple-primary"
+      ]
+    },
+    {
+      "test_id": "negative:missing_primary_reference",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "primary-reference"
+      ]
+    },
+    {
+      "test_id": "negative:bad_diagnostic_code",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'test_id': '019a5000-0000-7000-8000-000000000014',"
+      ]
+    },
+    {
+      "test_id": "negative:missing_diag_trigger",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "diag-trigger-reference"
+      ]
+    },
+    {
+      "test_id": "negative:out_of_order_events",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "event-execution-order"
+      ]
+    },
+    {
+      "test_id": "negative:duplicate_event_id",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "duplicate-event-id",
+        "hop-event-reference"
+      ]
+    },
+    {
+      "test_id": "negative:invalid_event_kind",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'test_id': '019a5000-0000-7000-8000-000000000014',"
+      ]
+    },
+    {
+      "test_id": "negative:completed_only_three",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "started-count",
+        "complete-4",
+        "aggregate"
+      ]
+    },
+    {
+      "test_id": "negative:result_snapshot_mismatch",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "snapshot-project"
+      ]
+    },
+    {
+      "test_id": "negative:bad_error_code",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'error_id': '019a5000-0000-7000-8000-000000000050'"
+      ]
+    },
+    {
+      "test_id": "negative:error_unexpected_results",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'error_id': '019a5000-0000-7000-8000-000000000050'"
+      ]
+    },
+    {
+      "test_id": "negative:self_ping_phantom_hop",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "self-ping-no-hops"
+      ]
+    },
+    {
+      "test_id": "negative:hop_missing_source_event",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "hop-event-reference"
+      ]
+    },
+    {
+      "test_id": "negative:hop_drop_without_cause",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "drop-cause"
+      ]
+    },
+    {
+      "test_id": "negative:unsent_marked_success",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "sent-counter",
+        "lost-counter",
+        "loss-percentage"
+      ]
+    },
+    {
+      "test_id": "negative:bad_icmp_identifier",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "icmp-identifier"
+      ]
+    },
+    {
+      "test_id": "negative:observation_tampered_outcome",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "aggregate"
+      ]
+    },
+    {
+      "test_id": "negative:wrong_error_class_for_code",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'error_id': '019a5000-0000-7000-8000-000000000050'"
+      ]
+    },
+    {
+      "test_id": "negative:frame_tx_missing_connection",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'test_id': '019a5000-0000-7000-8000-000000000014',"
+      ]
+    },
+    {
+      "test_id": "negative:frame_tx_missing_egress",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'test_id': '019a5000-0000-7000-8000-000000000014',"
+      ]
+    },
+    {
+      "test_id": "negative:frame_arrival_missing_ingress",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'test_id': '019a5000-0000-7000-8000-000000000014',"
+      ]
+    },
+    {
+      "test_id": "negative:frame_arrival_missing_frame_id",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'test_id': '019a5000-0000-7000-8000-000000000014',"
+      ]
+    },
+    {
+      "test_id": "negative:unknown_evidence_fact",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'test_id': '019a5000-0000-7000-8000-000000000014',"
+      ]
+    },
+    {
+      "test_id": "negative:wrong_evidence_fact_type",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'test_id': '019a5000-0000-7000-8000-000000000014',"
+      ]
+    },
+    {
+      "test_id": "negative:wrong_event_kind_case",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'test_id': '019a5000-0000-7000-8000-000000000014',"
+      ]
+    },
+    {
+      "test_id": "negative:invalid_warning_code",
+      "expected": "REJECT",
+      "status": "PASS",
+      "reason": [
+        "SCHEMA:{'contract_version': '1.0.0', 'test_id': '019a5000-0000-7000-8000-000000000014',"
+      ]
+    }
+  ],
+  "engine_tests_executed": 0,
+  "integration_tests_executed": 0
+}

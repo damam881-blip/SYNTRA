@@ -1,0 +1,32 @@
+[
+  {
+    "fixture": "rt-01.json",
+    "state_revision": 6,
+    "simulation_revision": 6,
+    "configuration_digest": "b0837374187220bde72972d13a708096eb7df76217c8c9487224c83df9a14e5e"
+  },
+  {
+    "fixture": "rt-02.json",
+    "state_revision": 6,
+    "simulation_revision": 6,
+    "configuration_digest": "5ee66c67e814beb69368f01b2ba1a43147892a6506fbdd3f289c99e7fc57f2eb"
+  },
+  {
+    "fixture": "rt-03.json",
+    "state_revision": 6,
+    "simulation_revision": 6,
+    "configuration_digest": "a9c2e47d5c3879fe2eb8e06216a029c5ea8023186f853877c9f7e3f7d6ec9306"
+  },
+  {
+    "fixture": "rt-04.json",
+    "state_revision": 10,
+    "simulation_revision": 10,
+    "configuration_digest": "ba18d012468c378746d93872281c15b4b5c132970a45e01f53657e3bbbd4642f"
+  },
+  {
+    "fixture": "rt-05.json",
+    "state_revision": 9,
+    "simulation_revision": 9,
+    "configuration_digest": "96418a28a37d656eeae445a82a89ea1a2558f293635f80c4e11b5bdb6d89d31c"
+  }
+]

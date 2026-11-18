@@ -1,0 +1,19 @@
+{
+  "contract_version": "1.0.0",
+  "command_id": "019a5000-0000-7000-8000-000000000015",
+  "test_id": "019a5000-0000-7000-8000-000000000014",
+  "project_id": "019a5000-0000-7000-8000-000000000001",
+  "source_device_id": "019a5000-0000-7000-8000-000000000002",
+  "destination_device_id": "019a5000-0000-7000-8000-000000000003",
+  "test_kind": "PING",
+  "expected_echo_requests": 4,
+  "initial_runtime_state": "FRESH",
+  "snapshot_ref": {
+    "project_id": "019a5000-0000-7000-8000-000000000001",
+    "snapshot_id": "019a5000-0000-7000-8000-000000000004",
+    "base_state_revision": 12,
+    "base_simulation_revision": 10,
+    "schema_version": "1.0.0",
+    "configuration_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  }
+}

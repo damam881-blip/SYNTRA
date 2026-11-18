@@ -1,0 +1,291 @@
+{
+  "contract_version": "1.0.0",
+  "status": "TASK-05-controlled approved reconstructed vocabulary",
+  "provenance": "Wire spellings for EvidenceEvent.kind and ErrorEnvelope.error_class were not exhaustively present in review DOCX; this register freezes reconstructed names, not byte parity with absent original.",
+  "event_kinds": [
+    "FRAME_TX",
+    "FRAME_ARRIVED",
+    "FRAME_DROPPED",
+    "DEVICE_PROCESSED",
+    "ARP_REQUEST",
+    "ARP_REPLY",
+    "ARP_RESOLUTION",
+    "ROUTE_SELECTED",
+    "ROUTE_FAILED",
+    "ICMP_ECHO_EMITTED",
+    "ICMP_ECHO_MATCHED",
+    "ICMP_ECHO_TIMEOUT",
+    "ICMP_ERROR_GENERATED",
+    "ICMP_ERROR_SUPPRESSED",
+    "ICMP_ERROR_DELIVERED",
+    "REQUEST_FINALIZED",
+    "TEST_FINALIZED",
+    "OBSERVATION_CLOSED",
+    "PENDING_EVENTS_CANCELLED",
+    "EXECUTION_LIMIT_REACHED",
+    "LOCAL_ECHO_PROCESSED",
+    "MAC_FLAPPING"
+  ],
+  "event_kind_groups": {
+    "frame": [
+      "FRAME_TX",
+      "FRAME_ARRIVED",
+      "FRAME_DROPPED"
+    ],
+    "protocol": [
+      "ARP_REQUEST",
+      "ARP_REPLY",
+      "ARP_RESOLUTION",
+      "ROUTE_SELECTED",
+      "ROUTE_FAILED",
+      "ICMP_ECHO_EMITTED",
+      "ICMP_ECHO_MATCHED",
+      "ICMP_ECHO_TIMEOUT",
+      "ICMP_ERROR_GENERATED",
+      "ICMP_ERROR_SUPPRESSED",
+      "ICMP_ERROR_DELIVERED",
+      "LOCAL_ECHO_PROCESSED"
+    ],
+    "lifecycle": [
+      "REQUEST_FINALIZED",
+      "TEST_FINALIZED",
+      "OBSERVATION_CLOSED",
+      "PENDING_EVENTS_CANCELLED",
+      "EXECUTION_LIMIT_REACHED"
+    ],
+    "observation": [
+      "DEVICE_PROCESSED",
+      "MAC_FLAPPING"
+    ]
+  },
+  "event_required_correlation_when_present": {
+    "FRAME_TX": [
+      "frame_id",
+      "connection_id",
+      "egress_interface_id"
+    ],
+    "FRAME_ARRIVED": [
+      "frame_id",
+      "connection_id",
+      "ingress_interface_id"
+    ],
+    "FRAME_DROPPED": [
+      "frame_id"
+    ],
+    "ROUTE_SELECTED": [
+      "device_id"
+    ],
+    "ICMP_ECHO_MATCHED": [
+      "request_sequence"
+    ]
+  },
+  "evidence_facts": {
+    "target_ipv4": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "route_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "router_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ttl_before": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ttl_after": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "arp_attempt": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "budget_limit": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "budget_consumed": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "observed_responder_count": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "reason_key": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 128
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "packet_type": {
+      "anyOf": [
+        {
+          "enum": [
+            "ECHO_REQUEST",
+            "ECHO_REPLY",
+            "ARP_REQUEST",
+            "ARP_REPLY",
+            "ICMP_ERROR"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "facts_policy": "Closed typed optional keys; absent or null means not observed/not applicable. No fabricated facts. Conditional correlations are enforced for listed event kinds; any new event/fact profile requires explicit TASK-05 contract revision.",
+  "error_classes": {
+    "COMMAND_INVALID": [
+      "MALFORMED_PING_COMMAND",
+      "INVALID_COMMAND_FIELD"
+    ],
+    "REFERENCE_INVALID": [
+      "UNKNOWN_PROJECT",
+      "UNKNOWN_SOURCE_DEVICE",
+      "UNKNOWN_DESTINATION_DEVICE",
+      "UNSUPPORTED_PING_SOURCE",
+      "UNSUPPORTED_PING_DESTINATION",
+      "CROSS_PROJECT_REFERENCE"
+    ],
+    "SNAPSHOT_INVALID": [
+      "MISSING_SNAPSHOT",
+      "SNAPSHOT_REVISION_MISMATCH",
+      "SNAPSHOT_DIGEST_MISMATCH"
+    ],
+    "VERSION_UNSUPPORTED": [
+      "UNSUPPORTED_MODEL_SCHEMA_VERSION",
+      "UNSUPPORTED_CONTRACT_VERSION"
+    ],
+    "PRECONDITION_CONFLICT": [
+      "REQUEST_PRECONDITION_CONFLICT"
+    ],
+    "PERSISTENCE_FAILURE": [
+      "PERSISTENCE_UNAVAILABLE"
+    ],
+    "CONTRACT_FAILURE": [
+      "CONTRACT_PROCESSING_ERROR"
+    ]
+  },
+  "diagnostic_codes": [
+    "SOURCE_IPV4_UNCONFIGURED",
+    "SOURCE_INTERFACE_DISABLED",
+    "SOURCE_LINK_DOWN",
+    "UNSUPPORTED_PING_ENDPOINT",
+    "DUPLICATE_IP_ENDPOINT_CONFLICT",
+    "MISSING_DEFAULT_GATEWAY",
+    "OFF_LINK_DEFAULT_GATEWAY",
+    "SELF_REFERENCING_GATEWAY",
+    "NO_MATCHING_ROUTE",
+    "NO_ELIGIBLE_ROUTE",
+    "STATIC_NEXT_HOP_INELIGIBLE",
+    "NON_FORWARDING_GATEWAY",
+    "ARP_NO_RESPONSE",
+    "ARP_AMBIGUOUS_RESPONSE",
+    "ARP_SAFETY_LIMITED",
+    "ARP_RESOLUTION_DEADLINE",
+    "TTL_EXPIRED",
+    "ICMP_ERROR_SUPPRESSED",
+    "ICMP_ERROR_DELIVERY_FAILED",
+    "ECHO_REQUEST_DROPPED",
+    "ECHO_REPLY_DROPPED",
+    "ECHO_REPLY_MISMATCH",
+    "ECHO_REPLY_DUPLICATE",
+    "ECHO_REPLY_LATE",
+    "ECHO_TIMEOUT",
+    "FRAME_BRANCH_TRAVERSAL_LIMIT",
+    "REQUEST_EVENT_BUDGET_EXHAUSTED",
+    "TEST_EVENT_BUDGET_EXHAUSTED",
+    "MAC_FLAPPING_DETECTED",
+    "L2_LOOP_OBSERVED",
+    "OBSERVATION_TRUNCATED",
+    "PENDING_EVENTS_CANCELLED",
+    "RETURN_PATH_FAILURE",
+    "CONFIGURATION_WARNING_OBSERVED"
+  ],
+  "warning_codes": [
+    "DUPLICATE_IPV4_L2_DOMAIN",
+    "OFF_LINK_GATEWAY",
+    "SELF_REFERENCING_GATEWAY",
+    "INELIGIBLE_STATIC_NEXT_HOP",
+    "L2_LOOP"
+  ],
+  "source_authority": "Upstream TASK-01..04 behavior is unchanged. Engine validates physical topology membership, causal assertions, ARP/timing. TASK-07 owns HTTP mapping."
+}

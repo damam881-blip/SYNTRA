@@ -1,0 +1,367 @@
+{
+  "schema_version": "1.0.0",
+  "project": {
+    "project_id": "0190a4c2-0001-7000-8000-000000000004",
+    "name": "RT-04 Two routers",
+    "description": "PC1-R1-R2-PC2 with bidirectional static routes",
+    "state_revision": 10,
+    "simulation_revision": 10,
+    "next_device_sequence": 5,
+    "next_mac_sequence": 11,
+    "next_connection_sequence": 4,
+    "created_at": "2026-10-24T09:00:00.000Z",
+    "updated_at": "2026-10-24T09:00:18.000Z"
+  },
+  "devices": [
+    {
+      "device_id": "0190a4c2-0100-7000-8000-000000000001",
+      "kind": "PC",
+      "display_name": "PC1",
+      "normalized_name": "pc1",
+      "device_sequence": 1,
+      "position": {
+        "x": 3.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "rotation_y_degrees": 0.0,
+      "created_at": "2026-10-24T09:00:01.000Z",
+      "default_gateway_ipv4": "192.168.10.1"
+    },
+    {
+      "device_id": "0190a4c2-0100-7000-8000-000000000002",
+      "kind": "ROUTER",
+      "display_name": "R1",
+      "normalized_name": "r1",
+      "device_sequence": 2,
+      "position": {
+        "x": 6.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "rotation_y_degrees": 0.0,
+      "created_at": "2026-10-24T09:00:03.000Z",
+      "next_route_sequence": 2
+    },
+    {
+      "device_id": "0190a4c2-0100-7000-8000-000000000003",
+      "kind": "ROUTER",
+      "display_name": "R2",
+      "normalized_name": "r2",
+      "device_sequence": 3,
+      "position": {
+        "x": 9.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "rotation_y_degrees": 0.0,
+      "created_at": "2026-10-24T09:00:05.000Z",
+      "next_route_sequence": 2
+    },
+    {
+      "device_id": "0190a4c2-0100-7000-8000-000000000004",
+      "kind": "PC",
+      "display_name": "PC2",
+      "normalized_name": "pc2",
+      "device_sequence": 4,
+      "position": {
+        "x": 12.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "rotation_y_degrees": 0.0,
+      "created_at": "2026-10-24T09:00:07.000Z",
+      "default_gateway_ipv4": "192.168.20.1"
+    }
+  ],
+  "interfaces": [
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-000000000001",
+      "device_id": "0190a4c2-0100-7000-8000-000000000001",
+      "display_name": "FastEthernet0",
+      "ordinal": 0,
+      "interface_kind": "FAST_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:d3:10:00:00:01",
+      "mac_sequence": 1,
+      "ipv4": {
+        "address": "192.168.10.10",
+        "prefix_length": 24
+      }
+    },
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-000000000009",
+      "device_id": "0190a4c2-0100-7000-8000-000000000002",
+      "display_name": "FastEthernet0/0",
+      "ordinal": 0,
+      "interface_kind": "FAST_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:d3:10:00:00:02",
+      "mac_sequence": 2,
+      "ipv4": {
+        "address": "192.168.10.1",
+        "prefix_length": 24
+      }
+    },
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-00000000000a",
+      "device_id": "0190a4c2-0100-7000-8000-000000000002",
+      "display_name": "FastEthernet0/1",
+      "ordinal": 1,
+      "interface_kind": "FAST_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:d3:10:00:00:03",
+      "mac_sequence": 3,
+      "ipv4": {
+        "address": "10.0.12.1",
+        "prefix_length": 30
+      }
+    },
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-00000000000b",
+      "device_id": "0190a4c2-0100-7000-8000-000000000002",
+      "display_name": "GigabitEthernet0/0",
+      "ordinal": 2,
+      "interface_kind": "GIGABIT_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:d3:10:00:00:04",
+      "mac_sequence": 4
+    },
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-00000000000c",
+      "device_id": "0190a4c2-0100-7000-8000-000000000002",
+      "display_name": "GigabitEthernet0/1",
+      "ordinal": 3,
+      "interface_kind": "GIGABIT_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:d3:10:00:00:05",
+      "mac_sequence": 5
+    },
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-000000000011",
+      "device_id": "0190a4c2-0100-7000-8000-000000000003",
+      "display_name": "FastEthernet0/0",
+      "ordinal": 0,
+      "interface_kind": "FAST_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:d3:10:00:00:06",
+      "mac_sequence": 6,
+      "ipv4": {
+        "address": "10.0.12.2",
+        "prefix_length": 30
+      }
+    },
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-000000000012",
+      "device_id": "0190a4c2-0100-7000-8000-000000000003",
+      "display_name": "FastEthernet0/1",
+      "ordinal": 1,
+      "interface_kind": "FAST_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:d3:10:00:00:07",
+      "mac_sequence": 7,
+      "ipv4": {
+        "address": "192.168.20.1",
+        "prefix_length": 24
+      }
+    },
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-000000000013",
+      "device_id": "0190a4c2-0100-7000-8000-000000000003",
+      "display_name": "GigabitEthernet0/0",
+      "ordinal": 2,
+      "interface_kind": "GIGABIT_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:d3:10:00:00:08",
+      "mac_sequence": 8
+    },
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-000000000014",
+      "device_id": "0190a4c2-0100-7000-8000-000000000003",
+      "display_name": "GigabitEthernet0/1",
+      "ordinal": 3,
+      "interface_kind": "GIGABIT_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:d3:10:00:00:09",
+      "mac_sequence": 9
+    },
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-000000000019",
+      "device_id": "0190a4c2-0100-7000-8000-000000000004",
+      "display_name": "FastEthernet0",
+      "ordinal": 0,
+      "interface_kind": "FAST_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:d3:10:00:00:0a",
+      "mac_sequence": 10,
+      "ipv4": {
+        "address": "192.168.20.10",
+        "prefix_length": 24
+      }
+    }
+  ],
+  "connections": [
+    {
+      "connection_id": "0190a4c2-0300-7000-8000-000000000001",
+      "interface_a_id": "0190a4c2-0200-7000-8000-000000000001",
+      "interface_b_id": "0190a4c2-0200-7000-8000-000000000009",
+      "cable_type": "GENERIC_ETHERNET",
+      "connection_sequence": 1,
+      "created_at": "2026-10-24T09:00:09.000Z"
+    },
+    {
+      "connection_id": "0190a4c2-0300-7000-8000-000000000002",
+      "interface_a_id": "0190a4c2-0200-7000-8000-00000000000a",
+      "interface_b_id": "0190a4c2-0200-7000-8000-000000000011",
+      "cable_type": "GENERIC_ETHERNET",
+      "connection_sequence": 2,
+      "created_at": "2026-10-24T09:00:11.000Z"
+    },
+    {
+      "connection_id": "0190a4c2-0300-7000-8000-000000000003",
+      "interface_a_id": "0190a4c2-0200-7000-8000-000000000012",
+      "interface_b_id": "0190a4c2-0200-7000-8000-000000000019",
+      "cable_type": "GENERIC_ETHERNET",
+      "connection_sequence": 3,
+      "created_at": "2026-10-24T09:00:13.000Z"
+    }
+  ],
+  "static_routes": [
+    {
+      "route_id": "0190a4c2-0400-7000-8000-000000000001",
+      "router_device_id": "0190a4c2-0100-7000-8000-000000000002",
+      "destination_network": "192.168.20.0",
+      "prefix_length": 24,
+      "next_hop_ipv4": "10.0.12.2",
+      "route_sequence": 1,
+      "created_at": "2026-10-24T09:00:15.000Z"
+    },
+    {
+      "route_id": "0190a4c2-0400-7000-8000-000000000002",
+      "router_device_id": "0190a4c2-0100-7000-8000-000000000003",
+      "destination_network": "192.168.10.0",
+      "prefix_length": 24,
+      "next_hop_ipv4": "10.0.12.1",
+      "route_sequence": 1,
+      "created_at": "2026-10-24T09:00:17.000Z"
+    }
+  ],
+  "revisions": [
+    {
+      "revision": 1,
+      "change_class": "TOPOLOGY",
+      "change_kinds": [
+        "PROJECT_CREATED"
+      ],
+      "affected_entity_ids": [
+        "0190a4c2-0001-7000-8000-000000000004"
+      ],
+      "committed_at": "2026-10-24T09:00:00.000Z"
+    },
+    {
+      "revision": 2,
+      "change_class": "MIXED",
+      "change_kinds": [
+        "DEVICE_ADDED",
+        "HOST_GATEWAY_CONFIGURED",
+        "INTERFACE_IPV4_CONFIGURED"
+      ],
+      "affected_entity_ids": [
+        "0190a4c2-0100-7000-8000-000000000001"
+      ],
+      "committed_at": "2026-10-24T09:00:02.000Z"
+    },
+    {
+      "revision": 3,
+      "change_class": "TOPOLOGY",
+      "change_kinds": [
+        "DEVICE_ADDED",
+        "INTERFACE_IPV4_CONFIGURED"
+      ],
+      "affected_entity_ids": [
+        "0190a4c2-0100-7000-8000-000000000002"
+      ],
+      "committed_at": "2026-10-24T09:00:04.000Z"
+    },
+    {
+      "revision": 4,
+      "change_class": "TOPOLOGY",
+      "change_kinds": [
+        "DEVICE_ADDED",
+        "INTERFACE_IPV4_CONFIGURED"
+      ],
+      "affected_entity_ids": [
+        "0190a4c2-0100-7000-8000-000000000003"
+      ],
+      "committed_at": "2026-10-24T09:00:06.000Z"
+    },
+    {
+      "revision": 5,
+      "change_class": "MIXED",
+      "change_kinds": [
+        "DEVICE_ADDED",
+        "HOST_GATEWAY_CONFIGURED",
+        "INTERFACE_IPV4_CONFIGURED"
+      ],
+      "affected_entity_ids": [
+        "0190a4c2-0100-7000-8000-000000000004"
+      ],
+      "committed_at": "2026-10-24T09:00:08.000Z"
+    },
+    {
+      "revision": 6,
+      "change_class": "TOPOLOGY",
+      "change_kinds": [
+        "CONNECTION_ADDED"
+      ],
+      "affected_entity_ids": [
+        "0190a4c2-0300-7000-8000-000000000001"
+      ],
+      "committed_at": "2026-10-24T09:00:10.000Z"
+    },
+    {
+      "revision": 7,
+      "change_class": "TOPOLOGY",
+      "change_kinds": [
+        "CONNECTION_ADDED"
+      ],
+      "affected_entity_ids": [
+        "0190a4c2-0300-7000-8000-000000000002"
+      ],
+      "committed_at": "2026-10-24T09:00:12.000Z"
+    },
+    {
+      "revision": 8,
+      "change_class": "TOPOLOGY",
+      "change_kinds": [
+        "CONNECTION_ADDED"
+      ],
+      "affected_entity_ids": [
+        "0190a4c2-0300-7000-8000-000000000003"
+      ],
+      "committed_at": "2026-10-24T09:00:14.000Z"
+    },
+    {
+      "revision": 9,
+      "change_class": "CONFIGURATION",
+      "change_kinds": [
+        "STATIC_ROUTE_ADDED"
+      ],
+      "affected_entity_ids": [
+        "0190a4c2-0400-7000-8000-000000000001"
+      ],
+      "committed_at": "2026-10-24T09:00:16.000Z"
+    },
+    {
+      "revision": 10,
+      "change_class": "CONFIGURATION",
+      "change_kinds": [
+        "STATIC_ROUTE_ADDED"
+      ],
+      "affected_entity_ids": [
+        "0190a4c2-0400-7000-8000-000000000002"
+      ],
+      "committed_at": "2026-10-24T09:00:18.000Z"
+    }
+  ]
+}

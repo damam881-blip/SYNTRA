@@ -1,0 +1,260 @@
+{
+  "schema_version": "1.0.0",
+  "project": {
+    "project_id": "0190a4c2-0001-7000-8000-000000000001",
+    "name": "RT-01 Basic LAN",
+    "description": "PC1-SW1-PC2 same subnet, no gateway",
+    "state_revision": 6,
+    "simulation_revision": 6,
+    "next_device_sequence": 4,
+    "next_mac_sequence": 11,
+    "next_connection_sequence": 3,
+    "created_at": "2026-10-24T09:00:00.000Z",
+    "updated_at": "2026-10-24T09:00:10.000Z"
+  },
+  "devices": [
+    {
+      "device_id": "0190a4c2-0100-7000-8000-000000000001",
+      "kind": "PC",
+      "display_name": "PC1",
+      "normalized_name": "pc1",
+      "device_sequence": 1,
+      "position": {
+        "x": 3.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "rotation_y_degrees": 0.0,
+      "created_at": "2026-10-24T09:00:01.000Z",
+      "default_gateway_ipv4": null
+    },
+    {
+      "device_id": "0190a4c2-0100-7000-8000-000000000002",
+      "kind": "L2_SWITCH",
+      "display_name": "SW1",
+      "normalized_name": "sw1",
+      "device_sequence": 2,
+      "position": {
+        "x": 6.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "rotation_y_degrees": 0.0,
+      "created_at": "2026-10-24T09:00:03.000Z"
+    },
+    {
+      "device_id": "0190a4c2-0100-7000-8000-000000000003",
+      "kind": "PC",
+      "display_name": "PC2",
+      "normalized_name": "pc2",
+      "device_sequence": 3,
+      "position": {
+        "x": 9.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "rotation_y_degrees": 0.0,
+      "created_at": "2026-10-24T09:00:05.000Z",
+      "default_gateway_ipv4": null
+    }
+  ],
+  "interfaces": [
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-000000000001",
+      "device_id": "0190a4c2-0100-7000-8000-000000000001",
+      "display_name": "FastEthernet0",
+      "ordinal": 0,
+      "interface_kind": "FAST_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:92:73:00:00:01",
+      "mac_sequence": 1,
+      "ipv4": {
+        "address": "192.168.10.10",
+        "prefix_length": 24
+      }
+    },
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-000000000009",
+      "device_id": "0190a4c2-0100-7000-8000-000000000002",
+      "display_name": "FastEthernet0/1",
+      "ordinal": 0,
+      "interface_kind": "FAST_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:92:73:00:00:02",
+      "mac_sequence": 2
+    },
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-00000000000a",
+      "device_id": "0190a4c2-0100-7000-8000-000000000002",
+      "display_name": "FastEthernet0/2",
+      "ordinal": 1,
+      "interface_kind": "FAST_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:92:73:00:00:03",
+      "mac_sequence": 3
+    },
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-00000000000b",
+      "device_id": "0190a4c2-0100-7000-8000-000000000002",
+      "display_name": "FastEthernet0/3",
+      "ordinal": 2,
+      "interface_kind": "FAST_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:92:73:00:00:04",
+      "mac_sequence": 4
+    },
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-00000000000c",
+      "device_id": "0190a4c2-0100-7000-8000-000000000002",
+      "display_name": "FastEthernet0/4",
+      "ordinal": 3,
+      "interface_kind": "FAST_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:92:73:00:00:05",
+      "mac_sequence": 5
+    },
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-00000000000d",
+      "device_id": "0190a4c2-0100-7000-8000-000000000002",
+      "display_name": "FastEthernet0/5",
+      "ordinal": 4,
+      "interface_kind": "FAST_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:92:73:00:00:06",
+      "mac_sequence": 6
+    },
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-00000000000e",
+      "device_id": "0190a4c2-0100-7000-8000-000000000002",
+      "display_name": "FastEthernet0/6",
+      "ordinal": 5,
+      "interface_kind": "FAST_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:92:73:00:00:07",
+      "mac_sequence": 7
+    },
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-00000000000f",
+      "device_id": "0190a4c2-0100-7000-8000-000000000002",
+      "display_name": "GigabitEthernet0/1",
+      "ordinal": 6,
+      "interface_kind": "GIGABIT_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:92:73:00:00:08",
+      "mac_sequence": 8
+    },
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-000000000010",
+      "device_id": "0190a4c2-0100-7000-8000-000000000002",
+      "display_name": "GigabitEthernet0/2",
+      "ordinal": 7,
+      "interface_kind": "GIGABIT_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:92:73:00:00:09",
+      "mac_sequence": 9
+    },
+    {
+      "interface_id": "0190a4c2-0200-7000-8000-000000000011",
+      "device_id": "0190a4c2-0100-7000-8000-000000000003",
+      "display_name": "FastEthernet0",
+      "ordinal": 0,
+      "interface_kind": "FAST_ETHERNET",
+      "admin_state": "ENABLED",
+      "mac_address": "02:92:73:00:00:0a",
+      "mac_sequence": 10,
+      "ipv4": {
+        "address": "192.168.10.20",
+        "prefix_length": 24
+      }
+    }
+  ],
+  "connections": [
+    {
+      "connection_id": "0190a4c2-0300-7000-8000-000000000001",
+      "interface_a_id": "0190a4c2-0200-7000-8000-000000000001",
+      "interface_b_id": "0190a4c2-0200-7000-8000-000000000009",
+      "cable_type": "GENERIC_ETHERNET",
+      "connection_sequence": 1,
+      "created_at": "2026-10-24T09:00:07.000Z"
+    },
+    {
+      "connection_id": "0190a4c2-0300-7000-8000-000000000002",
+      "interface_a_id": "0190a4c2-0200-7000-8000-00000000000a",
+      "interface_b_id": "0190a4c2-0200-7000-8000-000000000011",
+      "cable_type": "GENERIC_ETHERNET",
+      "connection_sequence": 2,
+      "created_at": "2026-10-24T09:00:09.000Z"
+    }
+  ],
+  "static_routes": [],
+  "revisions": [
+    {
+      "revision": 1,
+      "change_class": "TOPOLOGY",
+      "change_kinds": [
+        "PROJECT_CREATED"
+      ],
+      "affected_entity_ids": [
+        "0190a4c2-0001-7000-8000-000000000001"
+      ],
+      "committed_at": "2026-10-24T09:00:00.000Z"
+    },
+    {
+      "revision": 2,
+      "change_class": "TOPOLOGY",
+      "change_kinds": [
+        "DEVICE_ADDED",
+        "INTERFACE_IPV4_CONFIGURED"
+      ],
+      "affected_entity_ids": [
+        "0190a4c2-0100-7000-8000-000000000001"
+      ],
+      "committed_at": "2026-10-24T09:00:02.000Z"
+    },
+    {
+      "revision": 3,
+      "change_class": "TOPOLOGY",
+      "change_kinds": [
+        "DEVICE_ADDED"
+      ],
+      "affected_entity_ids": [
+        "0190a4c2-0100-7000-8000-000000000002"
+      ],
+      "committed_at": "2026-10-24T09:00:04.000Z"
+    },
+    {
+      "revision": 4,
+      "change_class": "TOPOLOGY",
+      "change_kinds": [
+        "DEVICE_ADDED",
+        "INTERFACE_IPV4_CONFIGURED"
+      ],
+      "affected_entity_ids": [
+        "0190a4c2-0100-7000-8000-000000000003"
+      ],
+      "committed_at": "2026-10-24T09:00:06.000Z"
+    },
+    {
+      "revision": 5,
+      "change_class": "TOPOLOGY",
+      "change_kinds": [
+        "CONNECTION_ADDED"
+      ],
+      "affected_entity_ids": [
+        "0190a4c2-0300-7000-8000-000000000001"
+      ],
+      "committed_at": "2026-10-24T09:00:08.000Z"
+    },
+    {
+      "revision": 6,
+      "change_class": "TOPOLOGY",
+      "change_kinds": [
+        "CONNECTION_ADDED"
+      ],
+      "affected_entity_ids": [
+        "0190a4c2-0300-7000-8000-000000000002"
+      ],
+      "committed_at": "2026-10-24T09:00:10.000Z"
+    }
+  ]
+}
