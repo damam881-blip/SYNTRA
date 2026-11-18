@@ -28,6 +28,12 @@ The backend follows a **Modular Monolith Architecture**, separating application 
 - `tests/unit/`: Unit tests for individual components.
 - `tests/integration/`: Integration tests between components.
 
+## Quality checks
+
+- Windows: `.\scripts\check.ps1`
+- Any OS (Linux/macOS/Windows): `python scripts/check.py`
+- Or via venv: `.venv/bin/python scripts/check.py`
+
 ## Architectural Rules
 
 1. The Simulation Engine is the authoritative source of network connectivity and Ping results.
