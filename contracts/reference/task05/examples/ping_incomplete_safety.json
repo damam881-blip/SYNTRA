@@ -1,0 +1,105 @@
+{
+  "contract_version": "1.0.0",
+  "test_id": "019a5000-0000-7000-8000-000000000014",
+  "project_id": "019a5000-0000-7000-8000-000000000001",
+  "source_device_id": "019a5000-0000-7000-8000-000000000002",
+  "destination_device_id": "019a5000-0000-7000-8000-000000000003",
+  "snapshot_ref": {
+    "project_id": "019a5000-0000-7000-8000-000000000001",
+    "snapshot_id": "019a5000-0000-7000-8000-000000000004",
+    "base_state_revision": 12,
+    "base_simulation_revision": 10,
+    "schema_version": "1.0.0",
+    "configuration_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "lifecycle": "CLOSED",
+  "execution_status": "INCOMPLETE",
+  "aggregate_outcome": null,
+  "observation_status": "NOT_STARTED",
+  "started_at_ns": 0,
+  "finalized_at_ns": 2000000000,
+  "closed_at_ns": 2000000000,
+  "statistics": {
+    "requests_planned": 4,
+    "requests_started": 2,
+    "requests_sent": 2,
+    "replies_received": 1,
+    "lost_sent_requests": 1,
+    "loss_percentage_hundredths": 5000,
+    "rtt_min_ns": 250000,
+    "rtt_max_ns": 250000,
+    "rtt_sum_ns": 250000,
+    "rtt_avg_ns_rounded": 250000
+  },
+  "request_results": [
+    {
+      "sequence": 1,
+      "icmp_identifier": 1234,
+      "outcome": "SUCCESS",
+      "started_at_ns": 0,
+      "deadline_at_ns": 1000000000,
+      "echo_request_emitted_at_ns": 100000,
+      "finalized_at_ns": 350000,
+      "matched_reply_event_id": "ev-match-1",
+      "rtt_ns": 250000,
+      "primary_diagnostic_id": null,
+      "forward_path_status": "COMPLETED",
+      "return_path_status": "COMPLETED"
+    },
+    {
+      "sequence": 2,
+      "icmp_identifier": 1234,
+      "outcome": "EXECUTION_LIMITED",
+      "started_at_ns": 1000000000,
+      "deadline_at_ns": 2000000000,
+      "echo_request_emitted_at_ns": 1000100000,
+      "finalized_at_ns": 2000000000,
+      "matched_reply_event_id": null,
+      "rtt_ns": null,
+      "primary_diagnostic_id": "d-limit",
+      "forward_path_status": "UNKNOWN",
+      "return_path_status": "UNKNOWN"
+    }
+  ],
+  "diagnostics": [
+    {
+      "diagnostic_id": "d-limit",
+      "code": "REQUEST_EVENT_BUDGET_EXHAUSTED",
+      "classification": "EXECUTION_LIMIT",
+      "is_primary": true,
+      "request_sequence": 2,
+      "direction": "FORWARD",
+      "detected_at_ns": 2000000000,
+      "detected_device_id": "019a5000-0000-7000-8000-000000000002",
+      "detected_interface_id": null,
+      "trigger_event_id": null,
+      "evidence_completeness": "COMPLETE",
+      "facts": {}
+    }
+  ],
+  "events": [
+    {
+      "event_id": "ev-match-1",
+      "creation_sequence": 1,
+      "execution_index": 1,
+      "virtual_time_ns": 350000,
+      "phase": 40,
+      "kind": "ICMP_ECHO_MATCHED",
+      "direction": "RETURN",
+      "request_sequence": 1,
+      "device_id": "019a5000-0000-7000-8000-000000000003",
+      "ingress_interface_id": null,
+      "egress_interface_id": null,
+      "packet_id": "pkt-1",
+      "frame_id": null,
+      "parent_frame_id": null,
+      "lineage_id": null,
+      "resolution_id": null,
+      "connection_id": null,
+      "diagnostic_id": null,
+      "facts": {}
+    }
+  ],
+  "hop_evidence": [],
+  "derived_warning_evidence": []
+}

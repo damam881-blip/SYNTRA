@@ -1,0 +1,1602 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.example.invalid/task05/approved-reconstructed-contract-v1.schema.json",
+  "title": "TASK-05 approved reconstructed machine-readable reference contract v1.0.0",
+  "description": "TASK-05-owned reconstructed wire vocabulary frozen for this approved reference bundle. Source REVIEW DOCX describes behavior but original JSON files unavailable; unchanged upstream networking semantics. Semantic runtime conditions not proven by schema.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/PingTestCommand"
+    },
+    {
+      "$ref": "#/$defs/PingTestResult"
+    },
+    {
+      "$ref": "#/$defs/ErrorEnvelope"
+    }
+  ],
+  "$defs": {
+    "SnapshotRef": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "snapshot_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "base_state_revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "base_simulation_revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "configuration_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "project_id",
+        "snapshot_id",
+        "base_state_revision",
+        "base_simulation_revision",
+        "schema_version",
+        "configuration_digest"
+      ],
+      "additionalProperties": false
+    },
+    "PingTestCommand": {
+      "type": "object",
+      "properties": {
+        "contract_version": {
+          "const": "1.0.0"
+        },
+        "command_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "test_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "project_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "source_device_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "destination_device_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "test_kind": {
+          "const": "PING"
+        },
+        "expected_echo_requests": {
+          "const": 4
+        },
+        "initial_runtime_state": {
+          "const": "FRESH"
+        },
+        "snapshot_ref": {
+          "$ref": "#/$defs/SnapshotRef"
+        }
+      },
+      "required": [
+        "contract_version",
+        "command_id",
+        "test_id",
+        "project_id",
+        "source_device_id",
+        "destination_device_id",
+        "test_kind",
+        "expected_echo_requests",
+        "initial_runtime_state",
+        "snapshot_ref"
+      ],
+      "additionalProperties": false
+    },
+    "PingStatistics": {
+      "type": "object",
+      "properties": {
+        "requests_planned": {
+          "const": 4
+        },
+        "requests_started": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "requests_sent": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "replies_received": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "lost_sent_requests": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "loss_percentage_hundredths": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rtt_min_ns": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rtt_max_ns": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rtt_sum_ns": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rtt_avg_ns_rounded": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "requests_planned",
+        "requests_started",
+        "requests_sent",
+        "replies_received",
+        "lost_sent_requests",
+        "loss_percentage_hundredths",
+        "rtt_min_ns",
+        "rtt_max_ns",
+        "rtt_sum_ns",
+        "rtt_avg_ns_rounded"
+      ],
+      "additionalProperties": false
+    },
+    "EchoRequestResult": {
+      "type": "object",
+      "properties": {
+        "sequence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "icmp_identifier": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "outcome": {
+          "enum": [
+            "SUCCESS",
+            "FAILED",
+            "TIMEOUT",
+            "EXECUTION_LIMITED"
+          ]
+        },
+        "started_at_ns": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "deadline_at_ns": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "echo_request_emitted_at_ns": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "finalized_at_ns": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "matched_reply_event_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rtt_ns": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "primary_diagnostic_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "forward_path_status": {
+          "enum": [
+            "COMPLETED",
+            "FAILED",
+            "NOT_STARTED",
+            "UNKNOWN"
+          ]
+        },
+        "return_path_status": {
+          "enum": [
+            "COMPLETED",
+            "FAILED",
+            "NOT_STARTED",
+            "UNKNOWN"
+          ]
+        }
+      },
+      "required": [
+        "sequence",
+        "icmp_identifier",
+        "outcome",
+        "started_at_ns",
+        "deadline_at_ns",
+        "echo_request_emitted_at_ns",
+        "finalized_at_ns",
+        "matched_reply_event_id",
+        "rtt_ns",
+        "primary_diagnostic_id",
+        "forward_path_status",
+        "return_path_status"
+      ],
+      "additionalProperties": false
+    },
+    "EvidenceFacts": {
+      "type": "object",
+      "properties": {
+        "target_ipv4": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "route_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "router_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ttl_before": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 255
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ttl_after": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 255
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "arp_attempt": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "budget_limit": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "budget_consumed": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observed_responder_count": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason_key": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 128
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "packet_type": {
+          "anyOf": [
+            {
+              "enum": [
+                "ECHO_REQUEST",
+                "ECHO_REPLY",
+                "ARP_REQUEST",
+                "ARP_REPLY",
+                "ICMP_ERROR"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "EvidenceEvent": {
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "creation_sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "execution_index": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "virtual_time_ns": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "phase": {
+          "enum": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            60
+          ]
+        },
+        "kind": {
+          "enum": [
+            "FRAME_TX",
+            "FRAME_ARRIVED",
+            "FRAME_DROPPED",
+            "DEVICE_PROCESSED",
+            "ARP_REQUEST",
+            "ARP_REPLY",
+            "ARP_RESOLUTION",
+            "ROUTE_SELECTED",
+            "ROUTE_FAILED",
+            "ICMP_ECHO_EMITTED",
+            "ICMP_ECHO_MATCHED",
+            "ICMP_ECHO_TIMEOUT",
+            "ICMP_ERROR_GENERATED",
+            "ICMP_ERROR_SUPPRESSED",
+            "ICMP_ERROR_DELIVERED",
+            "REQUEST_FINALIZED",
+            "TEST_FINALIZED",
+            "OBSERVATION_CLOSED",
+            "PENDING_EVENTS_CANCELLED",
+            "EXECUTION_LIMIT_REACHED",
+            "LOCAL_ECHO_PROCESSED",
+            "MAC_FLAPPING"
+          ]
+        },
+        "direction": {
+          "enum": [
+            "FORWARD",
+            "RETURN",
+            "LOCAL",
+            "DIAGNOSTIC",
+            "NONE"
+          ]
+        },
+        "request_sequence": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "device_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ingress_interface_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "egress_interface_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "packet_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "frame_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "parent_frame_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lineage_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "resolution_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "connection_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "diagnostic_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "facts": {
+          "$ref": "#/$defs/EvidenceFacts"
+        }
+      },
+      "required": [
+        "event_id",
+        "creation_sequence",
+        "execution_index",
+        "virtual_time_ns",
+        "phase",
+        "kind",
+        "direction",
+        "request_sequence",
+        "device_id",
+        "ingress_interface_id",
+        "egress_interface_id",
+        "packet_id",
+        "frame_id",
+        "parent_frame_id",
+        "lineage_id",
+        "resolution_id",
+        "connection_id",
+        "diagnostic_id",
+        "facts"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "FRAME_TX"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "allOf": [
+              {
+                "properties": {
+                  "frame_id": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "required": [
+                  "frame_id"
+                ]
+              },
+              {
+                "properties": {
+                  "connection_id": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "required": [
+                  "connection_id"
+                ]
+              },
+              {
+                "properties": {
+                  "egress_interface_id": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "required": [
+                  "egress_interface_id"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "FRAME_ARRIVED"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "allOf": [
+              {
+                "properties": {
+                  "frame_id": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "required": [
+                  "frame_id"
+                ]
+              },
+              {
+                "properties": {
+                  "connection_id": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "required": [
+                  "connection_id"
+                ]
+              },
+              {
+                "properties": {
+                  "ingress_interface_id": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "required": [
+                  "ingress_interface_id"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "FRAME_DROPPED"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "allOf": [
+              {
+                "properties": {
+                  "frame_id": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "required": [
+                  "frame_id"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "ROUTE_SELECTED"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "allOf": [
+              {
+                "properties": {
+                  "device_id": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "required": [
+                  "device_id"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "ICMP_ECHO_MATCHED"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "allOf": [
+              {
+                "properties": {
+                  "request_sequence": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "required": [
+                  "request_sequence"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "HopEvidence": {
+      "type": "object",
+      "properties": {
+        "hop_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "packet_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "frame_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "request_sequence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "direction": {
+          "enum": [
+            "FORWARD",
+            "RETURN",
+            "DIAGNOSTIC"
+          ]
+        },
+        "from_device_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "to_device_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "egress_interface_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "ingress_interface_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "connection_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "tx_start_ns": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rx_complete_ns": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "outcome": {
+          "enum": [
+            "DELIVERED",
+            "DROPPED"
+          ]
+        },
+        "drop_diagnostic_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_event_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "hop_id",
+        "packet_id",
+        "frame_id",
+        "request_sequence",
+        "direction",
+        "from_device_id",
+        "to_device_id",
+        "egress_interface_id",
+        "ingress_interface_id",
+        "connection_id",
+        "tx_start_ns",
+        "rx_complete_ns",
+        "outcome",
+        "drop_diagnostic_id",
+        "source_event_ids"
+      ],
+      "additionalProperties": false
+    },
+    "Diagnostic": {
+      "type": "object",
+      "properties": {
+        "diagnostic_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "code": {
+          "enum": [
+            "SOURCE_IPV4_UNCONFIGURED",
+            "SOURCE_INTERFACE_DISABLED",
+            "SOURCE_LINK_DOWN",
+            "UNSUPPORTED_PING_ENDPOINT",
+            "DUPLICATE_IP_ENDPOINT_CONFLICT",
+            "MISSING_DEFAULT_GATEWAY",
+            "OFF_LINK_DEFAULT_GATEWAY",
+            "SELF_REFERENCING_GATEWAY",
+            "NO_MATCHING_ROUTE",
+            "NO_ELIGIBLE_ROUTE",
+            "STATIC_NEXT_HOP_INELIGIBLE",
+            "NON_FORWARDING_GATEWAY",
+            "ARP_NO_RESPONSE",
+            "ARP_AMBIGUOUS_RESPONSE",
+            "ARP_SAFETY_LIMITED",
+            "ARP_RESOLUTION_DEADLINE",
+            "TTL_EXPIRED",
+            "ICMP_ERROR_SUPPRESSED",
+            "ICMP_ERROR_DELIVERY_FAILED",
+            "ECHO_REQUEST_DROPPED",
+            "ECHO_REPLY_DROPPED",
+            "ECHO_REPLY_MISMATCH",
+            "ECHO_REPLY_DUPLICATE",
+            "ECHO_REPLY_LATE",
+            "ECHO_TIMEOUT",
+            "FRAME_BRANCH_TRAVERSAL_LIMIT",
+            "REQUEST_EVENT_BUDGET_EXHAUSTED",
+            "TEST_EVENT_BUDGET_EXHAUSTED",
+            "MAC_FLAPPING_DETECTED",
+            "L2_LOOP_OBSERVED",
+            "OBSERVATION_TRUNCATED",
+            "PENDING_EVENTS_CANCELLED",
+            "RETURN_PATH_FAILURE",
+            "CONFIGURATION_WARNING_OBSERVED"
+          ]
+        },
+        "classification": {
+          "enum": [
+            "SIMULATION_FAILURE",
+            "EXECUTION_LIMIT",
+            "WARNING",
+            "OBSERVATION",
+            "INFORMATION"
+          ]
+        },
+        "is_primary": {
+          "type": "boolean"
+        },
+        "request_sequence": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "direction": {
+          "enum": [
+            "FORWARD",
+            "RETURN",
+            "LOCAL",
+            "DIAGNOSTIC",
+            "NONE"
+          ]
+        },
+        "detected_at_ns": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "detected_device_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "detected_interface_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "trigger_event_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence_completeness": {
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "UNKNOWN"
+          ]
+        },
+        "facts": {
+          "$ref": "#/$defs/EvidenceFacts"
+        }
+      },
+      "required": [
+        "diagnostic_id",
+        "code",
+        "classification",
+        "is_primary",
+        "request_sequence",
+        "direction",
+        "detected_at_ns",
+        "detected_device_id",
+        "detected_interface_id",
+        "trigger_event_id",
+        "evidence_completeness",
+        "facts"
+      ],
+      "additionalProperties": false
+    },
+    "DerivedWarning": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "enum": [
+            "DUPLICATE_IPV4_L2_DOMAIN",
+            "OFF_LINK_GATEWAY",
+            "SELF_REFERENCING_GATEWAY",
+            "INELIGIBLE_STATIC_NEXT_HOP",
+            "L2_LOOP"
+          ]
+        },
+        "device_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "interface_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "facts": {
+          "$ref": "#/$defs/EvidenceFacts"
+        }
+      },
+      "required": [
+        "code",
+        "device_id",
+        "interface_id",
+        "facts"
+      ],
+      "additionalProperties": false
+    },
+    "PingTestResult": {
+      "type": "object",
+      "properties": {
+        "contract_version": {
+          "const": "1.0.0"
+        },
+        "test_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "project_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "source_device_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "destination_device_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "snapshot_ref": {
+          "$ref": "#/$defs/SnapshotRef"
+        },
+        "lifecycle": {
+          "const": "CLOSED"
+        },
+        "execution_status": {
+          "enum": [
+            "COMPLETED",
+            "INCOMPLETE"
+          ]
+        },
+        "aggregate_outcome": {
+          "anyOf": [
+            {
+              "enum": [
+                "SUCCESS",
+                "PARTIAL_SUCCESS",
+                "FAILURE"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observation_status": {
+          "enum": [
+            "COMPLETE",
+            "TRUNCATED",
+            "NOT_STARTED"
+          ]
+        },
+        "started_at_ns": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "finalized_at_ns": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "closed_at_ns": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "statistics": {
+          "$ref": "#/$defs/PingStatistics"
+        },
+        "request_results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EchoRequestResult"
+          },
+          "maxItems": 4
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Diagnostic"
+          }
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EvidenceEvent"
+          },
+          "maxItems": 40000
+        },
+        "hop_evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/HopEvidence"
+          }
+        },
+        "derived_warning_evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DerivedWarning"
+          }
+        }
+      },
+      "required": [
+        "contract_version",
+        "test_id",
+        "project_id",
+        "source_device_id",
+        "destination_device_id",
+        "snapshot_ref",
+        "lifecycle",
+        "execution_status",
+        "aggregate_outcome",
+        "observation_status",
+        "started_at_ns",
+        "finalized_at_ns",
+        "closed_at_ns",
+        "statistics",
+        "request_results",
+        "diagnostics",
+        "events",
+        "hop_evidence",
+        "derived_warning_evidence"
+      ],
+      "additionalProperties": false
+    },
+    "ErrorDetail": {
+      "type": "object",
+      "properties": {
+        "field_path": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "reason_key": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "observed_value": {
+          "anyOf": [
+            {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 256
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "field_path",
+        "reason_key",
+        "observed_value"
+      ],
+      "additionalProperties": false
+    },
+    "ErrorEnvelope": {
+      "type": "object",
+      "properties": {
+        "contract_version": {
+          "const": "1.0.0"
+        },
+        "error_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "project_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "test_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_class": {
+          "enum": [
+            "COMMAND_INVALID",
+            "REFERENCE_INVALID",
+            "SNAPSHOT_INVALID",
+            "VERSION_UNSUPPORTED",
+            "PRECONDITION_CONFLICT",
+            "PERSISTENCE_FAILURE",
+            "CONTRACT_FAILURE"
+          ]
+        },
+        "code": {
+          "enum": [
+            "MALFORMED_PING_COMMAND",
+            "INVALID_COMMAND_FIELD",
+            "UNKNOWN_PROJECT",
+            "UNKNOWN_SOURCE_DEVICE",
+            "UNKNOWN_DESTINATION_DEVICE",
+            "UNSUPPORTED_PING_SOURCE",
+            "UNSUPPORTED_PING_DESTINATION",
+            "CROSS_PROJECT_REFERENCE",
+            "MISSING_SNAPSHOT",
+            "SNAPSHOT_REVISION_MISMATCH",
+            "SNAPSHOT_DIGEST_MISMATCH",
+            "UNSUPPORTED_MODEL_SCHEMA_VERSION",
+            "UNSUPPORTED_CONTRACT_VERSION",
+            "REQUEST_PRECONDITION_CONFLICT",
+            "PERSISTENCE_UNAVAILABLE",
+            "CONTRACT_PROCESSING_ERROR"
+          ]
+        },
+        "message_key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ErrorDetail"
+          }
+        },
+        "snapshot_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SnapshotRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "retryable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "contract_version",
+        "error_id",
+        "project_id",
+        "test_id",
+        "error_class",
+        "code",
+        "message_key",
+        "details",
+        "snapshot_ref",
+        "retryable"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "error_class": {
+                "const": "COMMAND_INVALID"
+              }
+            },
+            "required": [
+              "error_class"
+            ]
+          },
+          "then": {
+            "properties": {
+              "code": {
+                "enum": [
+                  "MALFORMED_PING_COMMAND",
+                  "INVALID_COMMAND_FIELD"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "error_class": {
+                "const": "REFERENCE_INVALID"
+              }
+            },
+            "required": [
+              "error_class"
+            ]
+          },
+          "then": {
+            "properties": {
+              "code": {
+                "enum": [
+                  "UNKNOWN_PROJECT",
+                  "UNKNOWN_SOURCE_DEVICE",
+                  "UNKNOWN_DESTINATION_DEVICE",
+                  "UNSUPPORTED_PING_SOURCE",
+                  "UNSUPPORTED_PING_DESTINATION",
+                  "CROSS_PROJECT_REFERENCE"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "error_class": {
+                "const": "SNAPSHOT_INVALID"
+              }
+            },
+            "required": [
+              "error_class"
+            ]
+          },
+          "then": {
+            "properties": {
+              "code": {
+                "enum": [
+                  "MISSING_SNAPSHOT",
+                  "SNAPSHOT_REVISION_MISMATCH",
+                  "SNAPSHOT_DIGEST_MISMATCH"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "error_class": {
+                "const": "VERSION_UNSUPPORTED"
+              }
+            },
+            "required": [
+              "error_class"
+            ]
+          },
+          "then": {
+            "properties": {
+              "code": {
+                "enum": [
+                  "UNSUPPORTED_MODEL_SCHEMA_VERSION",
+                  "UNSUPPORTED_CONTRACT_VERSION"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "error_class": {
+                "const": "PRECONDITION_CONFLICT"
+              }
+            },
+            "required": [
+              "error_class"
+            ]
+          },
+          "then": {
+            "properties": {
+              "code": {
+                "enum": [
+                  "REQUEST_PRECONDITION_CONFLICT"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "error_class": {
+                "const": "PERSISTENCE_FAILURE"
+              }
+            },
+            "required": [
+              "error_class"
+            ]
+          },
+          "then": {
+            "properties": {
+              "code": {
+                "enum": [
+                  "PERSISTENCE_UNAVAILABLE"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "error_class": {
+                "const": "CONTRACT_FAILURE"
+              }
+            },
+            "required": [
+              "error_class"
+            ]
+          },
+          "then": {
+            "properties": {
+              "code": {
+                "enum": [
+                  "CONTRACT_PROCESSING_ERROR"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

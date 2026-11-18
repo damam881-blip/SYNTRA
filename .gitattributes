@@ -1,0 +1,2 @@
+# Preserve approved reference artifacts byte-for-byte on all platforms.
+contracts/** -text
