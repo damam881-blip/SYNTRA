@@ -30,5 +30,5 @@ migration is `migrations/versions/0001_initial.py`.
   consistency, immutability guards, retention policy.
 - Read views `v_ping_event`, `v_ping_diagnostic`, `v_ping_hop`, `v_ping_warning`
   expose TASK-05 evidence arrays without duplicating storage.
-- Real PostgreSQL integration suite: 30 tests (schema, constraints,
+- Real PostgreSQL integration suite: 33 tests (schema, constraints,
   lifecycle, atomicity, snapshot digests, evidence, retention).

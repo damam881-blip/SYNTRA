@@ -5,9 +5,9 @@
 | Check | Result |
 |---|---|
 | `ruff check app migrations` | 0 errors |
-| `pytest -q` (unit + contract + integration) | 313 passed, 0 failed |
-| PostgreSQL integration suite (`tests/integration/db`) | 30 passed |
-| Alembic `upgrade head` / `downgrade base` / `upgrade head` | success |
+| `pytest -q` (unit + contract + integration) | 316 passed, 0 failed |
+| PostgreSQL integration suite (`tests/integration/db`) | 33 passed |
+| Alembic `upgrade head` / `downgrade base` / `upgrade head` | success; covered by PostgreSQL integration test |
 | `pglast` parse of `app/db/sql/constraints.sql` | 0 syntax errors |
 
 ## Contract verification
@@ -26,6 +26,9 @@
   `verify_snapshot` passes for every fixture.
 - Ping result SHA-256 is recomputed from the stored canonical bytes and
   verified by a database trigger; mismatched values are rejected.
+- `record_ping_result` and `record_error_envelope` validate documents against
+  the frozen TASK-05 Draft 2020-12 schema before persistence; unknown fields
+  and invalid nested shapes are rejected.
 
 ## Constraint verification
 

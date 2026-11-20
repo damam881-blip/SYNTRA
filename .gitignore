@@ -29,7 +29,15 @@ htmlcov/
 models/
 *.gguf
 *.safetensors
+# TASK-06 ORM source is not a local AI model directory.
+!app/db/models/
+!app/db/models/**
+app/db/models/__pycache__/
 
 # Logs
 *.log
 logs/
+# TASK-06 durable-log source is application code, not generated logs.
+!app/modules/logs/
+!app/modules/logs/**
+app/modules/logs/__pycache__/
