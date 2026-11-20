@@ -6,6 +6,19 @@ Strings (dotted-decimal only, T1-01) exist only at the parse/format boundary.
 from enum import StrEnum
 
 _MAX_ADDRESS = 0xFFFFFFFF
+LIMITED_BROADCAST = _MAX_ADDRESS
+
+# TASK-02 §3.1A: excluded structural ranges for host/gateway/next-hop addresses.
+EXCLUDED_IPV4_RANGES: tuple[tuple[int, int, str], ...] = (
+    (0x00000000, 8, "0.0.0.0/8"),
+    (0x7F000000, 8, "127.0.0.0/8"),
+    (0xA9FE0000, 16, "169.254.0.0/16"),
+    (0xE0000000, 4, "224.0.0.0/4"),
+    (0xF0000000, 4, "240.0.0.0/4"),
+)
+
+MIN_HOST_PREFIX_LENGTH = 1
+MAX_HOST_PREFIX_LENGTH = 30
 
 
 class InvalidIPv4AddressError(ValueError):
@@ -25,6 +38,8 @@ class HostAddressProblem(StrEnum):
     UNSUPPORTED_PREFIX_LENGTH = "UNSUPPORTED_PREFIX_LENGTH"
     NETWORK_ADDRESS = "NETWORK_ADDRESS"
     BROADCAST_ADDRESS = "BROADCAST_ADDRESS"
+    EXCLUDED_ADDRESS = "EXCLUDED_ADDRESS"
+    LIMITED_BROADCAST = "LIMITED_BROADCAST"
 
 
 def parse_ipv4(text: str) -> int:
@@ -99,13 +114,40 @@ def same_subnet(first: int, second: int, mask: int) -> bool:
     return network_address(first, mask) == network_address(second, mask)
 
 
+def prefix_mask(prefix: int) -> int:
+    """Return the contiguous mask for a prefix length 0..32."""
+    if type(prefix) is not int or not 0 <= prefix <= 32:
+        raise ValueError("prefix length must be an int between 0 and 32")
+    if prefix == 0:
+        return 0
+    return (0xFFFFFFFF << (32 - prefix)) & _MAX_ADDRESS
+
+
+def special_address_problem(address: int) -> HostAddressProblem | None:
+    """Classify an address that is structurally unusable as a host/next-hop address.
+
+    TASK-02 §3.1A excludes 0.0.0.0/8, 127.0.0.0/8, 169.254.0.0/16, 224.0.0.0/4
+    and 240.0.0.0/4. The limited broadcast address is reported separately.
+    """
+    _check_address(address)
+    if address == LIMITED_BROADCAST:
+        return HostAddressProblem.LIMITED_BROADCAST
+    for network, prefix, _name in EXCLUDED_IPV4_RANGES:
+        if address & prefix_mask(prefix) == network:
+            return HostAddressProblem.EXCLUDED_ADDRESS
+    return None
+
+
 def host_address_problem(address: int, mask: int) -> HostAddressProblem | None:
     """Return why `address/mask` is unusable as a host address, or None if usable.
 
-    OPEN (T2-02): /31 and /32 behavior. PROPOSED: unsupported as host addressing in V1.
-    The mask parser itself still accepts them (routes need /0../32 masks).
+    Host interface prefixes are /1../30 in V1; route masks may still be /0../32.
     """
-    if prefix_length(mask) >= 31:
+    special = special_address_problem(address)
+    if special is not None:
+        return special
+    prefix = prefix_length(mask)
+    if not MIN_HOST_PREFIX_LENGTH <= prefix <= MAX_HOST_PREFIX_LENGTH:
         return HostAddressProblem.UNSUPPORTED_PREFIX_LENGTH
     if address == network_address(address, mask):
         return HostAddressProblem.NETWORK_ADDRESS

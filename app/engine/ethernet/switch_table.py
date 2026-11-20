@@ -10,6 +10,8 @@ from enum import StrEnum
 from app.engine.ethernet.mac import BROADCAST_MAC, InvalidMacAddressError, is_group_address
 
 MAC_AGING_NS = 300 * 1_000_000_000  # T1-03 / T3-08: 300 s per entry
+MAC_FLAP_WINDOW_NS = 1_000_000_000  # T3-DEC-49: 1000 virtual ms
+MAC_FLAP_MOVEMENTS = 3
 
 
 class LearnOutcome(StrEnum):
@@ -22,6 +24,100 @@ class LearnOutcome(StrEnum):
 class LearnResult:
     outcome: LearnOutcome
     previous_port: str | None
+
+
+@dataclass(frozen=True, slots=True)
+class MacFlapEvent:
+    """Deterministic MAC-flapping evidence for one (switch, MAC) pair."""
+
+    switch_id: str
+    mac: int
+    movements: int
+    first_moved_at_ns: int
+    detected_at_ns: int
+    ports: tuple[str, ...]
+
+
+class MacFlapDetector:
+    """Three source-port movements within 1000 ms per (switch, MAC) trigger a flap.
+
+    This detector is intentionally separate from ``SwitchMacTable``: a movement is
+    still recorded in the forwarding table even when it produces flap evidence.
+    """
+
+    def __init__(
+        self,
+        *,
+        window_ns: int = MAC_FLAP_WINDOW_NS,
+        threshold: int = MAC_FLAP_MOVEMENTS,
+    ) -> None:
+        if type(window_ns) is not int or window_ns <= 0:
+            raise ValueError("window_ns must be a positive int")
+        if type(threshold) is not int or threshold < 2:
+            raise ValueError("threshold must be an int of at least 2")
+        self._window_ns = window_ns
+        self._threshold = threshold
+        self._history: dict[tuple[str, int], list[tuple[int, str, str]]] = {}
+        self._flapping: set[tuple[str, int]] = set()
+
+    def record_movement(
+        self,
+        *,
+        switch_id: str,
+        mac: int,
+        previous_port: str,
+        new_port: str,
+        now_ns: int,
+    ) -> MacFlapEvent | None:
+        if not isinstance(switch_id, str) or not switch_id:
+            raise ValueError("switch_id must be a non-empty string")
+        if is_group_address(mac):
+            raise InvalidMacAddressError("group/broadcast MAC cannot flap as a source")
+        if previous_port == new_port:
+            raise ValueError("a movement requires a different previous and new port")
+        _check_port(previous_port)
+        _check_port(new_port)
+        _check_time(now_ns)
+
+        key = (switch_id, mac)
+        history = self._history.setdefault(key, [])
+        history.append((now_ns, previous_port, new_port))
+        cutoff = now_ns - self._window_ns
+        history[:] = [entry for entry in history if entry[0] >= cutoff]
+
+        if len(history) < self._threshold:
+            self._flapping.discard(key)
+            return None
+        if key in self._flapping:
+            return None
+
+        self._flapping.add(key)
+        ports: list[str] = [history[0][1]]
+        ports.extend(entry[2] for entry in history)
+        return MacFlapEvent(
+            switch_id=switch_id,
+            mac=mac,
+            movements=len(history),
+            first_moved_at_ns=history[0][0],
+            detected_at_ns=now_ns,
+            ports=tuple(ports),
+        )
+
+    def movements(self, switch_id: str, mac: int, now_ns: int) -> int:
+        key = (switch_id, mac)
+        history = self._history.get(key, [])
+        cutoff = now_ns - self._window_ns
+        return sum(1 for entry in history if entry[0] >= cutoff)
+
+    def reset(self, switch_id: str | None = None, mac: int | None = None) -> None:
+        if switch_id is None and mac is None:
+            self._history.clear()
+            self._flapping.clear()
+            return
+        for key in tuple(self._history):
+            if (switch_id is None or key[0] == switch_id) and (mac is None or key[1] == mac):
+                self._history.pop(key, None)
+                self._flapping.discard(key)
 
 
 class ForwardAction(StrEnum):
