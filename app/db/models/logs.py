@@ -12,7 +12,6 @@ from sqlalchemy import (
     ForeignKeyConstraint,
     Integer,
     String,
-    Text,
     UniqueConstraint,
     func,
 )
@@ -65,9 +64,7 @@ class PingLog(Base):
     aggregate_outcome: Mapped[AggregateOutcome | None] = mapped_column(
         AGGREGATE_OUTCOME, nullable=True
     )
-    execution_status: Mapped[ExecutionStatus] = mapped_column(
-        EXECUTION_STATUS, nullable=False
-    )
+    execution_status: Mapped[ExecutionStatus] = mapped_column(EXECUTION_STATUS, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now(), index=True
     )
@@ -114,21 +111,11 @@ class RetentionPolicy(Base):
     __tablename__ = "retention_policy"
 
     policy_name: Mapped[str] = mapped_column(String(32), primary_key=True)
-    action_log_retention_days: Mapped[int] = mapped_column(
-        Integer, nullable=False, default=90
-    )
-    ping_log_retention_days: Mapped[int] = mapped_column(
-        Integer, nullable=False, default=365
-    )
-    error_log_retention_days: Mapped[int] = mapped_column(
-        Integer, nullable=False, default=365
-    )
-    ping_result_retention_days: Mapped[int] = mapped_column(
-        Integer, nullable=False, default=365
-    )
-    snapshot_retention_days: Mapped[int] = mapped_column(
-        Integer, nullable=False, default=365
-    )
+    action_log_retention_days: Mapped[int] = mapped_column(Integer, nullable=False, default=90)
+    ping_log_retention_days: Mapped[int] = mapped_column(Integer, nullable=False, default=365)
+    error_log_retention_days: Mapped[int] = mapped_column(Integer, nullable=False, default=365)
+    ping_result_retention_days: Mapped[int] = mapped_column(Integer, nullable=False, default=365)
+    snapshot_retention_days: Mapped[int] = mapped_column(Integer, nullable=False, default=365)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,

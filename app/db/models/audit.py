@@ -24,9 +24,7 @@ class ProjectTombstone(Base):
     project_name: Mapped[str] = mapped_column(String(64), nullable=False)
     last_state_revision: Mapped[int] = mapped_column(BigInteger, nullable=False)
     last_simulation_revision: Mapped[int] = mapped_column(BigInteger, nullable=False)
-    deleted_by: Mapped[str] = mapped_column(
-        String(128), nullable=False, default="system"
-    )
+    deleted_by: Mapped[str] = mapped_column(String(128), nullable=False, default="system")
     deleted_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
@@ -34,14 +32,10 @@ class ProjectTombstone(Base):
     __table_args__ = (
         uuid7_check("project_id", "tombstone_id_uuid7"),
         positive_check("last_state_revision", "tombstone_state_revision_positive"),
-        positive_check(
-            "last_simulation_revision", "tombstone_simulation_revision_positive"
-        ),
+        positive_check("last_simulation_revision", "tombstone_simulation_revision_positive"),
         CheckConstraint(
             "last_simulation_revision <= last_state_revision",
             name="tombstone_simulation_not_ahead",
         ),
-        CheckConstraint(
-            "length(btrim(project_name)) > 0", name="tombstone_name_not_blank"
-        ),
+        CheckConstraint("length(btrim(project_name)) > 0", name="tombstone_name_not_blank"),
     )

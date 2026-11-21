@@ -1,11 +1,14 @@
-﻿"""TASK-04 topology and configuration persistence models.
+"""TASK-04 topology and configuration persistence models.
 The relational shape mirrors the approved TASK-04 v1.0.0 logical model.  The
 canonical document remains the interchange/snapshot form; these tables are the
 committed project aggregate.
 """
+
 from __future__ import annotations
+
 import uuid
 from datetime import datetime
+
 from sqlalchemy import (
     BigInteger,
     CheckConstraint,
@@ -19,8 +22,10 @@ from sqlalchemy import (
     UniqueConstraint,
     func,
 )
-from sqlalchemy.dialects.postgresql import ARRAY, UUID as PGUUID
+from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.db.base import Base, IPv4UInt32, positive_check, uuid7_check
 from app.db.enums import AdminState, CableType, ChangeClass, DeviceKind, InterfaceKind
 from app.db.pgtypes import (
@@ -30,22 +35,18 @@ from app.db.pgtypes import (
     DEVICE_KIND,
     INTERFACE_KIND,
 )
+
+
 class Project(Base):
     __tablename__ = "project"
     project_id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(64), nullable=False)
     description: Mapped[str | None] = mapped_column(String(2000))
     state_revision: Mapped[int] = mapped_column(BigInteger, nullable=False, default=1)
-    simulation_revision: Mapped[int] = mapped_column(
-        BigInteger, nullable=False, default=1
-    )
-    next_device_sequence: Mapped[int] = mapped_column(
-        BigInteger, nullable=False, default=1
-    )
+    simulation_revision: Mapped[int] = mapped_column(BigInteger, nullable=False, default=1)
+    next_device_sequence: Mapped[int] = mapped_column(BigInteger, nullable=False, default=1)
     next_mac_sequence: Mapped[int] = mapped_column(BigInteger, nullable=False, default=1)
-    next_connection_sequence: Mapped[int] = mapped_column(
-        BigInteger, nullable=False, default=1
-    )
+    next_connection_sequence: Mapped[int] = mapped_column(BigInteger, nullable=False, default=1)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
@@ -83,25 +84,19 @@ class Project(Base):
         ),
         positive_check("next_device_sequence", "next_device_sequence_positive"),
         positive_check("next_mac_sequence", "next_mac_sequence_positive"),
-        positive_check(
-            "next_connection_sequence", "next_connection_sequence_positive"
-        ),
-        CheckConstraint(
-            "length(btrim(name)) > 0", name="name_not_blank"
-        ),
+        positive_check("next_connection_sequence", "next_connection_sequence_positive"),
+        CheckConstraint("length(btrim(name)) > 0", name="name_not_blank"),
     )
+
+
 class ProjectRevision(Base):
     __tablename__ = "project_revision"
     project_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("project.project_id", ondelete="CASCADE"), primary_key=True
     )
     revision: Mapped[int] = mapped_column(BigInteger, primary_key=True)
-    change_class: Mapped[ChangeClass] = mapped_column(
-        CHANGE_CLASS, nullable=False
-    )
-    change_kinds: Mapped[list[str]] = mapped_column(
-        ARRAY(String(32)), nullable=False
-    )
+    change_class: Mapped[ChangeClass] = mapped_column(CHANGE_CLASS, nullable=False)
+    change_kinds: Mapped[list[str]] = mapped_column(ARRAY(String(32)), nullable=False)
     affected_entity_ids: Mapped[list[uuid.UUID]] = mapped_column(
         ARRAY(PGUUID(as_uuid=True)), nullable=False, default=list
     )
@@ -111,9 +106,7 @@ class ProjectRevision(Base):
     project: Mapped[Project] = relationship(back_populates="revisions")
     __table_args__ = (
         positive_check("revision", "revision_positive"),
-        CheckConstraint(
-            "array_length(change_kinds, 1) >= 1", name="change_kinds_not_empty"
-        ),
+        CheckConstraint("array_length(change_kinds, 1) >= 1", name="change_kinds_not_empty"),
         CheckConstraint(
             "change_kinds <@ ARRAY["
             "'PROJECT_CREATED','DEVICE_ADDED','DEVICE_REMOVED','DEVICE_RENAMED',"
@@ -126,6 +119,8 @@ class ProjectRevision(Base):
             name="change_kinds_approved",
         ),
     )
+
+
 class Checkpoint(Base):
     __tablename__ = "checkpoint"
     checkpoint_id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
@@ -156,15 +151,15 @@ class Checkpoint(Base):
             name="fk_checkpoint_project_revision",
         ),
     )
+
+
 class Device(Base):
     __tablename__ = "device"
     device_id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
     project_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("project.project_id", ondelete="CASCADE"), nullable=False
     )
-    kind: Mapped[DeviceKind] = mapped_column(
-        DEVICE_KIND, nullable=False
-    )
+    kind: Mapped[DeviceKind] = mapped_column(DEVICE_KIND, nullable=False)
     display_name: Mapped[str] = mapped_column(String(64), nullable=False)
     normalized_name: Mapped[str] = mapped_column(Text, nullable=False)
     device_sequence: Mapped[int] = mapped_column(BigInteger, nullable=False)
@@ -172,9 +167,7 @@ class Device(Base):
     position_x: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
     position_y: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
     position_z: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
-    rotation_y_degrees: Mapped[float] = mapped_column(
-        Float, nullable=False, default=0.0
-    )
+    rotation_y_degrees: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
     next_route_sequence: Mapped[int | None] = mapped_column(BigInteger)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
@@ -205,19 +198,11 @@ class Device(Base):
     __table_args__ = (
         uuid7_check("device_id", "device_id_uuid7"),
         UniqueConstraint("project_id", "device_id", name="uq_device_project_device"),
-        UniqueConstraint(
-            "project_id", "normalized_name", name="uq_device_project_normalized_name"
-        ),
-        UniqueConstraint(
-            "project_id", "device_sequence", name="uq_device_project_sequence"
-        ),
+        UniqueConstraint("project_id", "normalized_name", name="uq_device_project_normalized_name"),
+        UniqueConstraint("project_id", "device_sequence", name="uq_device_project_sequence"),
         positive_check("device_sequence", "device_sequence_positive"),
-        CheckConstraint(
-            "length(btrim(display_name)) > 0", name="display_name_not_blank"
-        ),
-        CheckConstraint(
-            "length(normalized_name) > 0", name="normalized_name_not_blank"
-        ),
+        CheckConstraint("length(btrim(display_name)) > 0", name="display_name_not_blank"),
+        CheckConstraint("length(normalized_name) > 0", name="normalized_name_not_blank"),
         CheckConstraint(
             "rotation_y_degrees >= -180 AND rotation_y_degrees < 180",
             name="rotation_bounds",
@@ -232,6 +217,8 @@ class Device(Base):
             name="route_counter_positive",
         ),
     )
+
+
 class Interface(Base):
     __tablename__ = "interface"
     interface_id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
@@ -241,12 +228,8 @@ class Interface(Base):
     device_id: Mapped[uuid.UUID] = mapped_column(nullable=False)
     display_name: Mapped[str] = mapped_column(String(32), nullable=False)
     ordinal: Mapped[int] = mapped_column(SmallInteger, nullable=False)
-    interface_kind: Mapped[InterfaceKind] = mapped_column(
-        INTERFACE_KIND, nullable=False
-    )
-    admin_state: Mapped[AdminState] = mapped_column(
-        ADMIN_STATE, nullable=False
-    )
+    interface_kind: Mapped[InterfaceKind] = mapped_column(INTERFACE_KIND, nullable=False)
+    admin_state: Mapped[AdminState] = mapped_column(ADMIN_STATE, nullable=False)
     mac_address: Mapped[str] = mapped_column(String(17), nullable=False)
     mac_sequence: Mapped[int] = mapped_column(BigInteger, nullable=False)
     ipv4_address: Mapped[int | None] = mapped_column(IPv4UInt32)
@@ -263,15 +246,9 @@ class Interface(Base):
     )
     __table_args__ = (
         uuid7_check("interface_id", "interface_id_uuid7"),
-        UniqueConstraint(
-            "project_id", "interface_id", name="uq_interface_project_interface"
-        ),
-        UniqueConstraint(
-            "device_id", "ordinal", name="uq_interface_device_ordinal"
-        ),
-        UniqueConstraint(
-            "project_id", "mac_address", name="uq_interface_project_mac"
-        ),
+        UniqueConstraint("project_id", "interface_id", name="uq_interface_project_interface"),
+        UniqueConstraint("device_id", "ordinal", name="uq_interface_device_ordinal"),
+        UniqueConstraint("project_id", "mac_address", name="uq_interface_project_mac"),
         ForeignKeyConstraint(
             ["project_id", "device_id"],
             ["device.project_id", "device.device_id"],
@@ -294,8 +271,7 @@ class Interface(Base):
             name="ipv4_pair_complete",
         ),
         CheckConstraint(
-            "ipv4_prefix_length IS NULL "
-            "OR (ipv4_prefix_length >= 1 AND ipv4_prefix_length <= 30)",
+            "ipv4_prefix_length IS NULL OR (ipv4_prefix_length >= 1 AND ipv4_prefix_length <= 30)",
             name="ipv4_prefix_bounds",
         ),
         CheckConstraint(
@@ -303,6 +279,8 @@ class Interface(Base):
             name="ipv4_uint32",
         ),
     )
+
+
 class Connection(Base):
     __tablename__ = "connection"
     connection_id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
@@ -311,9 +289,7 @@ class Connection(Base):
     )
     interface_a_id: Mapped[uuid.UUID] = mapped_column(nullable=False)
     interface_b_id: Mapped[uuid.UUID] = mapped_column(nullable=False)
-    cable_type: Mapped[CableType] = mapped_column(
-        CABLE_TYPE, nullable=False
-    )
+    cable_type: Mapped[CableType] = mapped_column(CABLE_TYPE, nullable=False)
     connection_sequence: Mapped[int] = mapped_column(BigInteger, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
@@ -355,6 +331,8 @@ class Connection(Base):
         positive_check("connection_sequence", "connection_sequence_positive"),
         CheckConstraint("interface_a_id < interface_b_id", name="endpoints_canonical"),
     )
+
+
 class StaticRoute(Base):
     __tablename__ = "static_route"
     route_id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
@@ -381,9 +359,7 @@ class StaticRoute(Base):
     )
     __table_args__ = (
         uuid7_check("route_id", "route_id_uuid7"),
-        UniqueConstraint(
-            "router_device_id", "route_sequence", name="uq_route_router_sequence"
-        ),
+        UniqueConstraint("router_device_id", "route_sequence", name="uq_route_router_sequence"),
         UniqueConstraint(
             "router_device_id",
             "destination_network",
@@ -397,9 +373,7 @@ class StaticRoute(Base):
             name="fk_route_router_project",
         ),
         positive_check("route_sequence", "route_sequence_positive"),
-        CheckConstraint(
-            "prefix_length >= 0 AND prefix_length <= 32", name="prefix_bounds"
-        ),
+        CheckConstraint("prefix_length >= 0 AND prefix_length <= 32", name="prefix_bounds"),
         CheckConstraint(
             "destination_network >= 0 AND destination_network <= 4294967295",
             name="destination_uint32",
