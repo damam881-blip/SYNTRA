@@ -42,8 +42,7 @@ def downgrade() -> None:
             column.type.name
             for table in Base.metadata.tables.values()
             for column in table.columns
-            if getattr(column.type, "native_enum", False)
-            and getattr(column.type, "name", None)
+            if getattr(column.type, "native_enum", False) and getattr(column.type, "name", None)
         }
     ):
         bind.execute(sa.text(f'DROP TYPE IF EXISTS "{enum_type}" CASCADE'))

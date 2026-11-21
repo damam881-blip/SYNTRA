@@ -47,9 +47,7 @@ CONSTRAINTS_FILE = "constraints.sql"
 
 def load_constraints_sql() -> str:
     """Return the packaged integrity script exactly as shipped."""
-    return resources.files(SQL_DIRECTORY).joinpath(CONSTRAINTS_FILE).read_text(
-        encoding="utf-8"
-    )
+    return resources.files(SQL_DIRECTORY).joinpath(CONSTRAINTS_FILE).read_text(encoding="utf-8")
 
 
 def create_schema(bind: Connection | object) -> None:
@@ -79,8 +77,7 @@ def drop_schema(bind: Connection | object) -> None:
                 column.type.name
                 for table in Base.metadata.tables.values()
                 for column in table.columns
-                if getattr(column.type, "native_enum", False)
-                and getattr(column.type, "name", None)
+                if getattr(column.type, "native_enum", False) and getattr(column.type, "name", None)
             }
         ):
             connection.execute(text(f'DROP TYPE IF EXISTS "{enum_type}" CASCADE'))

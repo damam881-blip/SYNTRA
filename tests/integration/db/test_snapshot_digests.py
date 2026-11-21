@@ -87,14 +87,8 @@ def _load_fixture(session, path):
                 admin_state=i["admin_state"],
                 mac_address=i["mac_address"],
                 mac_sequence=i["mac_sequence"],
-                ipv4_address=(
-                    None
-                    if i.get("ipv4") is None
-                    else ipv4_to_int(i["ipv4"]["address"])
-                ),
-                ipv4_prefix_length=(
-                    None if i.get("ipv4") is None else i["ipv4"]["prefix_length"]
-                ),
+                ipv4_address=(None if i.get("ipv4") is None else ipv4_to_int(i["ipv4"]["address"])),
+                ipv4_prefix_length=(None if i.get("ipv4") is None else i["ipv4"]["prefix_length"]),
             )
         )
     session.flush()
@@ -142,9 +136,7 @@ def test_snapshot_digest_matches_fixture(clean_engine, fixture_name, expected_di
     from sqlalchemy.orm import sessionmaker
 
     factory = sessionmaker(bind=clean_engine, expire_on_commit=False)
-    root = pathlib.Path(
-        r"E:\SYNTRA\network-simulator-backend\contracts\reference\task04\fixtures"
-    )
+    root = pathlib.Path(r"E:\SYNTRA\network-simulator-backend\contracts\reference\task04\fixtures")
     with factory() as session:
         pid, doc = _load_fixture(session, root / fixture_name)
         session.commit()

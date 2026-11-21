@@ -93,9 +93,7 @@ def _require_text(value: str, field: str, *, max_length: int) -> str:
     if not trimmed:
         raise PreconditionConflictError(f"{field} must not be blank")
     if len(trimmed) > max_length:
-        raise PreconditionConflictError(
-            f"{field} must be at most {max_length} characters"
-        )
+        raise PreconditionConflictError(f"{field} must be at most {max_length} characters")
     return trimmed
 
 
@@ -114,9 +112,7 @@ def _entity_type(kind: Any) -> str:
 
 def _lock(session: Session, project_id: uuid.UUID) -> Project:
     project = session.scalars(
-        select(Project)
-        .where(Project.project_id == project_id)
-        .with_for_update(nowait=False)
+        select(Project).where(Project.project_id == project_id).with_for_update(nowait=False)
     ).one_or_none()
     if project is None:
         raise ProjectNotFoundError(f"project {project_id} does not exist")
@@ -125,27 +121,21 @@ def _lock(session: Session, project_id: uuid.UUID) -> Project:
 
 def _get_device(session: Session, project_id: uuid.UUID, device_id: uuid.UUID) -> Device:
     device = session.scalars(
-        select(Device).where(
-            Device.project_id == project_id, Device.device_id == device_id
-        )
+        select(Device).where(Device.project_id == project_id, Device.device_id == device_id)
     ).one_or_none()
     if device is None:
         raise PreconditionConflictError(f"device {device_id} is not in project {project_id}")
     return device
 
 
-def _get_interface(
-    session: Session, project_id: uuid.UUID, interface_id: uuid.UUID
-) -> Interface:
+def _get_interface(session: Session, project_id: uuid.UUID, interface_id: uuid.UUID) -> Interface:
     interface = session.scalars(
         select(Interface).where(
             Interface.project_id == project_id, Interface.interface_id == interface_id
         )
     ).one_or_none()
     if interface is None:
-        raise PreconditionConflictError(
-            f"interface {interface_id} is not in project {project_id}"
-        )
+        raise PreconditionConflictError(f"interface {interface_id} is not in project {project_id}")
     return interface
 
 
@@ -239,9 +229,7 @@ def create_project(
 ) -> Project:
     clean_name = _require_text(name, "name", max_length=64)
     clean_description = (
-        None
-        if description is None
-        else _require_text(description, "description", max_length=2000)
+        None if description is None else _require_text(description, "description", max_length=2000)
     )
     project = Project(
         project_id=uuid7(),
@@ -288,9 +276,7 @@ def open_project(
     return project_document(session, identifier)
 
 
-def list_checkpoints(
-    session: Session, project_id: uuid.UUID | str
-) -> list[Checkpoint]:
+def list_checkpoints(session: Session, project_id: uuid.UUID | str) -> list[Checkpoint]:
     identifier = _as_uuid(project_id, "project_id")
     read_project(session, identifier)
     return list(
@@ -436,9 +422,7 @@ def _validate_prefix(prefix: int, *, minimum: int, maximum: int, field: str) -> 
     if isinstance(prefix, bool) or not isinstance(prefix, int):
         raise PreconditionConflictError(f"{field} must be an integer")
     if not minimum <= prefix <= maximum:
-        raise PreconditionConflictError(
-            f"{field} must be between {minimum} and {maximum}"
-        )
+        raise PreconditionConflictError(f"{field} must be between {minimum} and {maximum}")
     return prefix
 
 
@@ -446,9 +430,7 @@ def _network_aligned(address: str, prefix: int) -> int:
     value = ipv4_to_int(address)
     host_bits = 32 - prefix
     if host_bits > 0 and (value & ((1 << host_bits) - 1)) != 0:
-        raise PreconditionConflictError(
-            f"{address}/{prefix} is not a canonical network address"
-        )
+        raise PreconditionConflictError(f"{address}/{prefix} is not a canonical network address")
     return value
 
 
@@ -467,9 +449,7 @@ def add_device(
     clean_name = _require_text(display_name, "display_name", max_length=64)
     normalized = normalize_name(clean_name)
     if not -180.0 <= float(rotation_y_degrees) < 180.0:
-        raise PreconditionConflictError(
-            "rotation_y_degrees must be in [-180, 180)"
-        )
+        raise PreconditionConflictError("rotation_y_degrees must be in [-180, 180)")
 
     project = _lock(session, identifier)
     clash = session.scalars(
@@ -918,9 +898,7 @@ def remove_connection(
         )
     ).one_or_none()
     if connection is None:
-        raise PreconditionConflictError(
-            f"connection {target_id} is not in project {identifier}"
-        )
+        raise PreconditionConflictError(f"connection {target_id} is not in project {identifier}")
     session.delete(connection)
     session.flush()
     _commit_mutation(
@@ -942,18 +920,14 @@ def remove_connection(
 # ---------------------------------------------------------------------------
 
 
-def _get_route(
-    session: Session, project_id: uuid.UUID, route_id: uuid.UUID
-) -> StaticRoute:
+def _get_route(session: Session, project_id: uuid.UUID, route_id: uuid.UUID) -> StaticRoute:
     route = session.scalars(
         select(StaticRoute).where(
             StaticRoute.project_id == project_id, StaticRoute.route_id == route_id
         )
     ).one_or_none()
     if route is None:
-        raise PreconditionConflictError(
-            f"static route {route_id} is not in project {project_id}"
-        )
+        raise PreconditionConflictError(f"static route {route_id} is not in project {project_id}")
     return route
 
 
@@ -1043,17 +1017,11 @@ def edit_static_route(
     new_prefix = route.prefix_length
     new_next_hop = route.next_hop_ipv4
     if destination_network is not None:
-        new_prefix = (
-            route.prefix_length if prefix_length is None else prefix_length
-        )
-        new_prefix = _validate_prefix(
-            new_prefix, minimum=0, maximum=32, field="prefix_length"
-        )
+        new_prefix = route.prefix_length if prefix_length is None else prefix_length
+        new_prefix = _validate_prefix(new_prefix, minimum=0, maximum=32, field="prefix_length")
         new_destination = _network_aligned(destination_network, new_prefix)
     elif prefix_length is not None:
-        new_prefix = _validate_prefix(
-            prefix_length, minimum=0, maximum=32, field="prefix_length"
-        )
+        new_prefix = _validate_prefix(prefix_length, minimum=0, maximum=32, field="prefix_length")
         new_destination = (
             route.destination_network & (((1 << 32) - 1) ^ ((1 << (32 - new_prefix)) - 1))
             if new_prefix > 0
@@ -1127,9 +1095,7 @@ def delete_static_route(
     )
 
 
-def list_revisions(
-    session: Session, project_id: uuid.UUID | str
-) -> list[ProjectRevision]:
+def list_revisions(session: Session, project_id: uuid.UUID | str) -> list[ProjectRevision]:
     identifier = _as_uuid(project_id, "project_id")
     read_project(session, identifier)
     return list(

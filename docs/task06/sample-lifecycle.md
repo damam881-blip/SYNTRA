@@ -15,7 +15,7 @@ project = create_project(session, name="Smoke Lab", description="basic lifecycle
 
 ```python
 pc1 = add_device(session, project.project_id, kind="PC", display_name="PC1")
-sw  = add_device(session, project.project_id, kind="L2_SWITCH", display_name="SW1")
+sw = add_device(session, project.project_id, kind="L2_SWITCH", display_name="SW1")
 pc2 = add_device(session, project.project_id, kind="PC", display_name="PC2")
 # each device allocates its inventory interfaces and MACs from the project counters
 ```
@@ -23,8 +23,12 @@ pc2 = add_device(session, project.project_id, kind="PC", display_name="PC2")
 ## 3. Configure
 
 ```python
-configure_interface_ipv4(session, project.project_id, interface_id=pc1_if, address="192.168.10.10", prefix_length=24)
-configure_interface_ipv4(session, project.project_id, interface_id=pc2_if, address="192.168.10.20", prefix_length=24)
+configure_interface_ipv4(
+    session, project.project_id, interface_id=pc1_if, address="192.168.10.10", prefix_length=24
+)
+configure_interface_ipv4(
+    session, project.project_id, interface_id=pc2_if, address="192.168.10.20", prefix_length=24
+)
 set_host_gateway(session, project.project_id, device_id=pc1.device_id, gateway_ipv4="192.168.10.1")
 add_connection(session, project.project_id, interface_a_id=pc1_if, interface_b_id=sw_if0)
 add_connection(session, project.project_id, interface_a_id=pc2_if, interface_b_id=sw_if1)
@@ -50,9 +54,9 @@ save_project(session, project.project_id, label="after topology")
 ## 6. Ping
 
 ```python
-command = accept_ping_command(session, project.project_id,
-                            source_device_id=pc1.device_id,
-                            destination_device_id=pc2.device_id)
+command = accept_ping_command(
+    session, project.project_id, source_device_id=pc1.device_id, destination_device_id=pc2.device_id
+)
 # freezes a snapshot at the current revisions and stores its digest
 record_ping_result(session, result_document)
 # immutable result + ping_log row
@@ -61,13 +65,16 @@ record_ping_result(session, result_document)
 ## 7. Error
 
 ```python
-record_error_envelope(session, {
-    "error_class": "PERSISTENCE_FAILURE",
-    "code": "PERSISTENCE_UNAVAILABLE",
-    "message_key": "persistence.failed",
-    "details": [{"x": 1}],
-    "project_id": str(project.project_id),
-})
+record_error_envelope(
+    session,
+    {
+        "error_class": "PERSISTENCE_FAILURE",
+        "code": "PERSISTENCE_UNAVAILABLE",
+        "message_key": "persistence.failed",
+        "details": [{"x": 1}],
+        "project_id": str(project.project_id),
+    },
+)
 ```
 
 ## 8. Delete

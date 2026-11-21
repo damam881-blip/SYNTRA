@@ -30,7 +30,8 @@ alembic upgrade head
 
 ```python
 from app.db.schema import create_schema, drop_schema
-create_schema(engine)   # idempotent-ish: drop first if re-running
+
+create_schema(engine)  # idempotent-ish: drop first if re-running
 ```
 
 ## Runtime schema bootstrap

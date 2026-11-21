@@ -95,18 +95,14 @@ def project_document(
     observed at one committed revision.
     """
     project = (
-        read_project(session, project_id)
-        if consistent_read
-        else session.get(Project, project_id)
+        read_project(session, project_id) if consistent_read else session.get(Project, project_id)
     )
     if project is None:
         raise ProjectNotFoundError(f"project {project_id} does not exist")
 
     devices = list(
         session.scalars(
-            select(Device)
-            .where(Device.project_id == project_id)
-            .order_by(Device.device_sequence)
+            select(Device).where(Device.project_id == project_id).order_by(Device.device_sequence)
         )
     )
     interfaces = list(
@@ -159,9 +155,7 @@ def project_document(
         "revisions": [_revision_payload(revision) for revision in revisions],
     }
     if checkpoints:
-        document["checkpoints"] = [
-            _checkpoint_payload(checkpoint) for checkpoint in checkpoints
-        ]
+        document["checkpoints"] = [_checkpoint_payload(checkpoint) for checkpoint in checkpoints]
     return document
 
 
@@ -275,9 +269,7 @@ def configuration_projection(document: dict[str, Any]) -> dict[str, Any]:
     """Return the approved TASK-04 section 7.4 behavioural projection."""
     devices = sorted(document["devices"], key=lambda d: d["device_sequence"])
     order = {device["device_id"]: device["device_sequence"] for device in devices}
-    interfaces = sorted(
-        document["interfaces"], key=lambda i: (order[i["device_id"]], i["ordinal"])
-    )
+    interfaces = sorted(document["interfaces"], key=lambda i: (order[i["device_id"]], i["ordinal"]))
     routes = sorted(
         document["static_routes"],
         key=lambda r: (order[r["router_device_id"]], r["route_sequence"]),

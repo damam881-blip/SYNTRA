@@ -30,13 +30,7 @@ def uuid7() -> uuid.UUID:
     timestamp_ms = int(time.time() * 1000) & ((1 << 48) - 1)
     rand_a = secrets.randbits(12)
     rand_b = secrets.randbits(62)
-    value = (
-        (timestamp_ms << 80)
-        | (0x7 << 76)
-        | (rand_a << 64)
-        | (0b10 << 62)
-        | rand_b
-    )
+    value = (timestamp_ms << 80) | (0x7 << 76) | (rand_a << 64) | (0b10 << 62) | rand_b
     return uuid.UUID(int=value)
 
 
@@ -56,12 +50,7 @@ def ipv4_to_int(address: str) -> int:
     octets = [int(part) for part in parts]
     if any(octet < 0 or octet > 255 for octet in octets):
         raise ValueError(f"invalid IPv4 address: {address!r}")
-    return (
-        (octets[0] << 24)
-        | (octets[1] << 16)
-        | (octets[2] << 8)
-        | octets[3]
-    )
+    return (octets[0] << 24) | (octets[1] << 16) | (octets[2] << 8) | octets[3]
 
 
 def int_to_ipv4(value: int) -> str:
