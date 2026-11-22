@@ -53,6 +53,11 @@ from app.db.models import (
     Connection as ConnectionModel,
 )
 from app.engine.topology.models import interface_inventory, mac_address_for
+from app.modules.projects.validation import (
+    cable_type_allowed,
+    validate_host_address,
+    validate_special_address,
+)
 
 # TASK-04 Unicode White_Space code points used by the approved normalisation rule.
 _WHITE_SPACE = frozenset(
@@ -633,6 +638,7 @@ def configure_interface_ipv4(
     identifier = _as_uuid(project_id, "project_id")
     target_id = _as_uuid(interface_id, "interface_id")
     prefix = _validate_prefix(prefix_length, minimum=1, maximum=30, field="prefix_length")
+    validate_host_address(address, prefix)
     value = ipv4_to_int(address)
     project = _lock(session, identifier)
     interface = _get_interface(session, identifier, target_id)
@@ -697,6 +703,7 @@ def set_host_gateway(
 ) -> Device:
     identifier = _as_uuid(project_id, "project_id")
     target_id = _as_uuid(device_id, "device_id")
+    validate_special_address(gateway_ipv4, "gateway_ipv4", role="gateway")
     value = ipv4_to_int(gateway_ipv4)
     project = _lock(session, identifier)
     device = _get_device(session, identifier, target_id)
@@ -844,6 +851,14 @@ def add_connection(
     second = _get_interface(session, identifier, endpoint_b)
     if first.device_id == second.device_id:
         raise PreconditionConflictError("an interface cannot connect to itself")
+    first_device = _get_device(session, identifier, first.device_id)
+    second_device = _get_device(session, identifier, second.device_id)
+    if not cable_type_allowed(first_device.kind, second_device.kind, cable):
+        raise IntegrityConflictError(
+            f"cable {_entity_type(cable)} is not compatible with "
+            f"{_entity_type(first_device.kind)} and "
+            f"{_entity_type(second_device.kind)} interfaces"
+        )
     # TASK-04 canonical endpoint order: lexicographically smaller interface_id first.
     if str(first.interface_id) <= str(second.interface_id):
         interface_a, interface_b = first, second
@@ -945,6 +960,7 @@ def add_static_route(
     router_id = _as_uuid(router_device_id, "router_device_id")
     prefix = _validate_prefix(prefix_length, minimum=0, maximum=32, field="prefix_length")
     destination = _network_aligned(destination_network, prefix)
+    validate_special_address(next_hop_ipv4, "next_hop_ipv4", role="next_hop")
     next_hop = ipv4_to_int(next_hop_ipv4)
 
     project = _lock(session, identifier)
