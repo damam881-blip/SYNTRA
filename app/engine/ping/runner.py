@@ -268,6 +268,8 @@ class SimulatedPingRunner:
     ) -> PingRunnerResult:
         """Return one complete TASK-05 result produced by deterministic simulation."""
         project = topology_from_replay_input(replay_input)
+        if project.project_id != str(project_id):
+            raise ResultAssemblyError("snapshot project does not match the command")
         evidence = self._simulate(
             project,
             test_id=str(test_id),

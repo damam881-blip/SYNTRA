@@ -23,7 +23,7 @@ from app.core.exceptions import ConflictError, NotFoundError, ValidationError
 from app.db.errors import ContractValidationError, PreconditionConflictError
 from app.db.models import PingTestCommand, Project, SnapshotRef
 from app.db.snapshot import replay_input
-from app.engine.ping import SimulatedPingRunner
+from app.engine.ping import InvalidReplayInputError, SimulatedPingRunner
 from app.modules.logs import service as logs_service
 from app.modules.projects import service as project_service
 
@@ -119,7 +119,10 @@ def create_ping_test_endpoint(
     snapshot_row = session.get(SnapshotRef, command.snapshot_id)
     if snapshot_row is None:
         raise NotFoundError("snapshot referenced by the Ping command does not exist")
-    replay = replay_input(snapshot_row)
+    try:
+        replay = replay_input(snapshot_row)
+    except InvalidReplayInputError as exc:
+        raise ValidationError(str(exc)) from exc
     result = SimulatedPingRunner().run(
         replay,
         test_id=command.test_id,

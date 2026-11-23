@@ -36,7 +36,8 @@ Two contract constraints shaped the design:
 class PingRunner(Protocol):
     def run(
         self,
-        replay_input: dict[str, object], *,
+        replay_input: dict[str, object],
+        *,
         test_id: UUID,
         project_id: UUID,
         source_device_id: UUID,

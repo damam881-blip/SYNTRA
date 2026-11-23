@@ -178,3 +178,28 @@ def test_persistence_errors_keep_outer_error_envelope(client):
     unknown_project = client.get(f"/api/v1/projects/{uuid7()}")
     assert unknown_project.status_code == 404
     assert unknown_project.json()["error"]["code"] == "NOT_FOUND"
+
+
+def test_invalid_replay_input_uses_validation_envelope(client, monkeypatch):
+    project_id, etag, pc_a, pc_b = _prepare_network(client)
+
+    from app.api.v1 import ping as ping_module
+    from app.engine.ping import InvalidReplayInputError
+
+    def reject_replay(_snapshot):
+        raise InvalidReplayInputError("invalid frozen replay input")
+
+    monkeypatch.setattr(ping_module, "replay_input", reject_replay)
+    response = client.post(
+        f"/api/v1/projects/{project_id}/ping-tests",
+        json={
+            "test_id": str(uuid7()),
+            "source_device_id": pc_a,
+            "destination_device_id": pc_b,
+        },
+        headers={"If-Match": etag},
+    )
+
+    assert response.status_code == 422
+    assert response.json()["error"]["code"] == "VALIDATION_ERROR"
+    assert response.json()["error"]["request_id"]
