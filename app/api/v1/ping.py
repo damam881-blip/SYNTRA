@@ -11,15 +11,17 @@ import json
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request, Response
+from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_db_session
 from app.api.v1.common import project_etag
 from app.api.v1.revision import require_if_match
 from app.api.v1.schemas import ApiMeta, PingCreateRequest, PingEnvelope, UUIDv7
-from app.core.exceptions import ConflictError, NotFoundError
-from app.db.errors import ContractValidationError
-from app.db.models import Project, SnapshotRef
+from app.core.exceptions import ConflictError, NotFoundError, ValidationError
+from app.db.errors import ContractValidationError, PreconditionConflictError
+from app.db.models import PingTestCommand, Project, SnapshotRef
 from app.db.snapshot import replay_input
 from app.engine.ping import SimulatedPingRunner
 from app.modules.logs import service as logs_service
@@ -62,6 +64,8 @@ def create_ping_test_endpoint(
                 code="TEST_ID_REUSE_CONFLICT",
             )
         snapshot_row = session.get(SnapshotRef, existing.snapshot_id)
+        if snapshot_row is None:
+            raise NotFoundError("snapshot referenced by the Ping result does not exist")
         project = project_service.open_project(session, project_id)
         result_document = _result_document(existing)
         response.status_code = 200
@@ -74,6 +78,24 @@ def create_ping_test_endpoint(
         )
         return PingEnvelope(data=result_document, meta=meta)
 
+    accepted_command = session.scalars(
+        select(PingTestCommand).where(PingTestCommand.test_id == payload.test_id)
+    ).one_or_none()
+    if accepted_command is not None:
+        if (
+            accepted_command.project_id != project_id
+            or accepted_command.source_device_id != payload.source_device_id
+            or accepted_command.destination_device_id != payload.destination_device_id
+        ):
+            raise ConflictError(
+                "test_id reuse conflicts with the accepted command",
+                code="TEST_ID_REUSE_CONFLICT",
+            )
+        raise ConflictError(
+            "the Ping command is already accepted and has no recorded result",
+            code="PING_IN_PROGRESS",
+        )
+
     try:
         command = logs_service.accept_ping_command(
             session,
@@ -85,7 +107,14 @@ def create_ping_test_endpoint(
     except LookupError as exc:
         raise NotFoundError(str(exc)) from exc
     except (ValueError, ContractValidationError) as exc:
-        raise NotFoundError(str(exc)) from exc
+        raise ValidationError(str(exc)) from exc
+    except IntegrityError as exc:
+        if "test_id" not in str(exc).lower():
+            raise
+        raise ConflictError(
+            "test_id conflicts with an already accepted Ping command",
+            code="TEST_ID_REUSE_CONFLICT",
+        ) from exc
 
     snapshot_row = session.get(SnapshotRef, command.snapshot_id)
     if snapshot_row is None:
@@ -100,14 +129,12 @@ def create_ping_test_endpoint(
     )
     try:
         row = logs_service.record_ping_result(session, result)
-    except Exception as exc:  # map duplicate/conflict to a typed conflict
-        message = str(exc)
-        if "already has a recorded result" in message or "unknown Ping test_id" in message:
-            raise ConflictError(message, code="TEST_ID_REUSE_CONFLICT") from exc
-        raise
+    except PreconditionConflictError as exc:
+        raise ConflictError(str(exc), code="TEST_ID_REUSE_CONFLICT") from exc
 
     project = project_service.open_project(session, project_id)
     response.headers["ETag"] = project_etag(project_id, project["project"]["state_revision"])
+    response.headers["Location"] = f"/api/v1/projects/{project_id}/ping-tests/{command.test_id}"
 
     meta = ApiMeta.for_ping(
         base_simulation_revision=snapshot_row.base_simulation_revision,
