@@ -139,10 +139,39 @@ def _disconnect_destination(replay: dict[str, Any]) -> None:
     ]
 
 
+def _disconnect_source(replay: dict[str, Any]) -> None:
+    document = _load_fixture("rt-01")
+    source = _endpoints(document)[0]
+    interfaces = {
+        interface["interface_id"]
+        for interface in document["interfaces"]
+        if interface["device_id"] == source
+    }
+    replay["configuration"]["connections"] = [
+        connection
+        for connection in replay["configuration"]["connections"]
+        if connection["interface_a_id"] not in interfaces
+        and connection["interface_b_id"] not in interfaces
+    ]
+
+
+def _disable_router_egress(replay: dict[str, Any]) -> None:
+    for interface in replay["configuration"]["interfaces"]:
+        if (interface.get("ipv4") or {}).get("address") == "192.168.20.1":
+            interface["admin_state"] = "DISABLED"
+
+
 def _remove_source_gateway(replay: dict[str, Any]) -> None:
     source = _device_with_ip(_load_fixture("rt-03"), SOURCE_IP)
     for device in replay["configuration"]["devices"]:
         if device["device_id"] == source:
+            device["default_gateway_ipv4"] = None
+
+
+def _remove_destination_gateway(replay: dict[str, Any]) -> None:
+    destination = _endpoints(_load_fixture("rt-03"))[1]
+    for device in replay["configuration"]["devices"]:
+        if device["device_id"] == destination:
             device["default_gateway_ipv4"] = None
 
 
@@ -230,6 +259,33 @@ def test_no_route() -> None:
     )
 
 
+def test_source_link_down() -> None:
+    result = _run("rt-01", mutate=_disconnect_source)
+    assert result["aggregate_outcome"] == "FAILURE"
+    assert all(
+        diagnostic["code"] == DiagnosticCode.SOURCE_LINK_DOWN.value
+        for diagnostic in result["diagnostics"]
+    )
+
+
+def test_no_eligible_route() -> None:
+    result = _run("rt-03", mutate=_disable_router_egress)
+    assert result["aggregate_outcome"] == "FAILURE"
+    assert any(
+        diagnostic["code"] == DiagnosticCode.NO_ELIGIBLE_ROUTE.value
+        for diagnostic in result["diagnostics"]
+    )
+
+
+def test_return_path_failure() -> None:
+    result = _run("rt-03", mutate=_remove_destination_gateway)
+    assert result["aggregate_outcome"] == "FAILURE"
+    assert any(
+        diagnostic["code"] == DiagnosticCode.MISSING_DEFAULT_GATEWAY.value
+        for diagnostic in result["diagnostics"]
+    )
+
+
 def test_self_ping() -> None:
     result = _run("rt-01", self_ping=True)
     assert result["aggregate_outcome"] == "SUCCESS"
@@ -273,6 +329,15 @@ def test_incomplete_under_event_budget_exhaustion(budget: int) -> None:
         for diagnostic in result["diagnostics"]
     )
     assert any(event["kind"] == "EXECUTION_LIMIT_REACHED" for event in result["events"])
+
+
+def test_test_event_budget_uses_test_budget_diagnostic() -> None:
+    result = _run("rt-01", runner=SimulatedPingRunner(test_event_budget=20))
+    assert result["execution_status"] == "INCOMPLETE"
+    assert all(
+        diagnostic["code"] == DiagnosticCode.TEST_EVENT_BUDGET_EXHAUSTED.value
+        for diagnostic in result["diagnostics"]
+    )
 
 
 def test_runner_is_deterministic() -> None:
