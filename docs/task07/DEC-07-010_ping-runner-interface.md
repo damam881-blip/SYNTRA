@@ -4,7 +4,7 @@
 |---|---|
 | Decision ID | `DEC-07-010` |
 | Title | Concrete `PingRunner` interface, ICMP identity, evidence phase map and step-7 gate |
-| Status | **APPROVED BY OWNER — 2026-11-23** (approval of this record only; step-7 implementation was not authorized) |
+| Status | **APPROVED BY OWNER — 2026-11-23; STEP 7 IMPLEMENTED — 2026-11-23** |
 | Date | 2026-11-23 |
 | Applies to | TASK-07 §8.2 / §14.2 step 7 and the real Ping simulation core |
 | Supersedes | Provisional phase wording in `PING-RUNNER-02_result-assembler.md` |

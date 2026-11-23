@@ -258,16 +258,13 @@ def topology_from_replay_input(replay_input: Mapping[str, object]) -> Project:
     """
     snapshot = parse_replay_input(replay_input)
     configuration = snapshot.configuration
-    assert isinstance(configuration["devices"], Sequence)
-    assert isinstance(configuration["interfaces"], Sequence)
-    assert isinstance(configuration["connections"], Sequence)
-    assert isinstance(configuration["static_routes"], Sequence)
-
-    device_rows = configuration["devices"]
-    route_rows = configuration["static_routes"]
+    device_rows = _require_sequence(configuration["devices"], "configuration.devices")
+    interface_rows = _require_sequence(configuration["interfaces"], "configuration.interfaces")
+    connection_rows = _require_sequence(configuration["connections"], "configuration.connections")
+    route_rows = _require_sequence(configuration["static_routes"], "configuration.static_routes")
     devices = _build_devices(device_rows, route_rows)
-    interfaces = _build_interfaces(configuration["interfaces"], devices)
-    connections = _build_connections(configuration["connections"])
+    interfaces = _build_interfaces(interface_rows, devices)
+    connections = _build_connections(connection_rows)
     routes = _build_routes(route_rows)
 
     project = Project(
@@ -276,8 +273,8 @@ def topology_from_replay_input(replay_input: Mapping[str, object]) -> Project:
         state_revision=snapshot.base_state_revision,
         simulation_revision=snapshot.base_simulation_revision,
         next_device_sequence=_max_sequence(device_rows, "device_sequence"),
-        next_mac_sequence=_max_sequence(configuration["interfaces"], "mac_sequence"),
-        next_connection_sequence=_max_sequence(configuration["connections"], "connection_sequence"),
+        next_mac_sequence=_max_sequence(interface_rows, "mac_sequence"),
+        next_connection_sequence=_max_sequence(connection_rows, "connection_sequence"),
         created_at="",
         updated_at="",
         devices=devices,

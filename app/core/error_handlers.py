@@ -8,6 +8,13 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.core.exceptions import AppError, InternalError
 from app.core.middleware import REQUEST_ID_HEADER
+from app.db.errors import (
+    ContractValidationError,
+    DeletionConfirmationError,
+    IntegrityConflictError,
+    PreconditionConflictError,
+    ProjectNotFoundError,
+)
 
 logger = logging.getLogger("network_simulator")
 
@@ -59,6 +66,31 @@ async def handle_app_error(request: Request, exc: Exception) -> JSONResponse:
     )
 
 
+async def handle_project_not_found(request: Request, exc: Exception) -> JSONResponse:
+    assert isinstance(exc, ProjectNotFoundError)
+    return _envelope(request, status_code=404, code="NOT_FOUND", message=str(exc))
+
+
+async def handle_deletion_confirmation(request: Request, exc: Exception) -> JSONResponse:
+    assert isinstance(exc, DeletionConfirmationError)
+    return _envelope(request, status_code=422, code="VALIDATION_ERROR", message=str(exc))
+
+
+async def handle_precondition_conflict(request: Request, exc: Exception) -> JSONResponse:
+    assert isinstance(exc, PreconditionConflictError)
+    return _envelope(request, status_code=409, code="PRECONDITION_CONFLICT", message=str(exc))
+
+
+async def handle_integrity_conflict(request: Request, exc: Exception) -> JSONResponse:
+    assert isinstance(exc, IntegrityConflictError)
+    return _envelope(request, status_code=409, code="INTEGRITY_CONFLICT", message=str(exc))
+
+
+async def handle_contract_validation(request: Request, exc: Exception) -> JSONResponse:
+    assert isinstance(exc, ContractValidationError)
+    return _envelope(request, status_code=422, code="CONTRACT_VALIDATION_ERROR", message=str(exc))
+
+
 async def handle_request_validation(request: Request, exc: Exception) -> JSONResponse:
     assert isinstance(exc, RequestValidationError)
     errors = [{"loc": list(e["loc"]), "msg": e["msg"], "type": e["type"]} for e in exc.errors()]
@@ -95,6 +127,11 @@ async def handle_unexpected(request: Request, exc: Exception) -> JSONResponse:
 
 def register_error_handlers(app: FastAPI) -> None:
     app.add_exception_handler(AppError, handle_app_error)
+    app.add_exception_handler(ProjectNotFoundError, handle_project_not_found)
+    app.add_exception_handler(DeletionConfirmationError, handle_deletion_confirmation)
+    app.add_exception_handler(PreconditionConflictError, handle_precondition_conflict)
+    app.add_exception_handler(IntegrityConflictError, handle_integrity_conflict)
+    app.add_exception_handler(ContractValidationError, handle_contract_validation)
     app.add_exception_handler(RequestValidationError, handle_request_validation)
     app.add_exception_handler(StarletteHTTPException, handle_http_exception)
     app.add_exception_handler(Exception, handle_unexpected)

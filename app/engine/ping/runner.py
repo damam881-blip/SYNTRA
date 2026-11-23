@@ -41,6 +41,7 @@ from app.engine.clock.queue import (
     ROUTER_PROCESSING_NS,
     SWITCH_PROCESSING_NS,
     TEST_EVENT_BUDGET,
+    BranchTraversalLimitExceeded,
     EventBudgetExhausted,
     EventQueue,
     transmission_delay_ns,
@@ -231,6 +232,7 @@ class _Runtime:
     packet_index: int = 0
     diagnostic_index: int = 0
     hop_index: int = 0
+    execution_limit_code: DiagnosticCode | None = None
 
 
 class SimulatedPingRunner:
@@ -1372,9 +1374,19 @@ class SimulatedPingRunner:
                     self._handle_arp_deadline(runtime, payload)
                 elif isinstance(payload, _RequestDeadline):
                     self._handle_request_deadline(runtime, payload.sequence, now)
-        except EventBudgetExhausted:
+        except EventBudgetExhausted as error:
             execution_status = "INCOMPLETE"
             observation_status = "NOT_STARTED"
+            runtime.execution_limit_code = (
+                DiagnosticCode.TEST_EVENT_BUDGET_EXHAUSTED
+                if "test event budget" in str(error)
+                else DiagnosticCode.REQUEST_EVENT_BUDGET_EXHAUSTED
+            )
+            self._limit_outstanding(runtime)
+        except BranchTraversalLimitExceeded:
+            execution_status = "INCOMPLETE"
+            observation_status = "NOT_STARTED"
+            runtime.execution_limit_code = DiagnosticCode.FRAME_BRANCH_TRAVERSAL_LIMIT
             self._limit_outstanding(runtime)
 
         finalizations = [
@@ -1680,7 +1692,7 @@ class SimulatedPingRunner:
             finalized = min(max(now, state.started_at_ns), state.started_at_ns + PING_DEADLINE_NS)
             diagnostic_id = self._diagnose(
                 runtime,
-                code=DiagnosticCode.REQUEST_EVENT_BUDGET_EXHAUSTED,
+                code=runtime.execution_limit_code or DiagnosticCode.REQUEST_EVENT_BUDGET_EXHAUSTED,
                 request_sequence=sequence,
                 direction="NONE",
                 time_ns=now,
