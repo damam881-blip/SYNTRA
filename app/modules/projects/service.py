@@ -1026,6 +1026,8 @@ def edit_static_route(
 ) -> StaticRoute:
     identifier = _as_uuid(project_id, "project_id")
     target_id = _as_uuid(route_id, "route_id")
+    if next_hop_ipv4 is not None:
+        validate_special_address(next_hop_ipv4, "next_hop_ipv4", role="next_hop")
     project = _lock(session, identifier)
     route = _get_route(session, identifier, target_id)
 
