@@ -42,6 +42,11 @@ QUERY_ROUTES = {
     ("GET", "/api/v1/projects/{project_id}/static-routes"),
 }
 
+PING_ROUTES = {
+    ("POST", "/api/v1/projects/{project_id}/ping-tests"),
+    ("GET", "/api/v1/projects/{project_id}/ping-tests/{test_id}"),
+}
+
 
 def _openapi_operations() -> dict[tuple[str, str], str]:
     """Resolve mounted operations through OpenAPI.
@@ -66,18 +71,12 @@ def test_step6_query_routes_are_mounted():
     assert QUERY_ROUTES <= set(_openapi_operations())
 
 
+def test_step7_ping_routes_are_mounted():
+    assert PING_ROUTES <= set(_openapi_operations())
+
+
 def test_health_endpoint_is_preserved():
     assert ("GET", "/health") in _openapi_operations()
-
-
-def test_deferred_endpoints_are_not_mounted_yet():
-    mounted = set(_openapi_operations())
-    # Ping endpoints (step 7) arrive in a later step.
-    assert ("POST", "/api/v1/projects/{project_id}/ping-tests") not in mounted
-    assert (
-        "GET",
-        "/api/v1/projects/{project_id}/ping-tests/{test_id}",
-    ) not in mounted
 
 
 def test_operation_ids_are_unique_and_named():
@@ -86,7 +85,7 @@ def test_operation_ids_are_unique_and_named():
         for key, operation_id in _openapi_operations().items()
         if key[1].startswith("/api/v1")
     }
-    assert len(operations) == len(EXPECTED_ROUTES) + len(QUERY_ROUTES)
+    assert len(operations) == len(EXPECTED_ROUTES) + len(QUERY_ROUTES) + len(PING_ROUTES)
     operation_ids = list(operations.values())
     assert len(set(operation_ids)) == len(operation_ids)
     assert "createProject" in operation_ids
