@@ -344,3 +344,19 @@ def test_runner_is_deterministic() -> None:
     first = _run("rt-04")
     second = _run("rt-04")
     assert first == second
+
+
+def test_runner_rejects_command_project_mismatch() -> None:
+    document = _load_fixture("rt-01")
+    replay = _replay_input(document)
+    source = _device_with_ip(document, SOURCE_IP)
+    destination = _endpoints(document)[1]
+
+    with pytest.raises(ValueError, match="snapshot project does not match the command"):
+        SimulatedPingRunner().run(
+            replay,
+            test_id=UUID(TEST_ID),
+            project_id=UUID("019a5000-0000-7000-8000-000000000009"),
+            source_device_id=UUID(source),
+            destination_device_id=UUID(destination),
+        )
