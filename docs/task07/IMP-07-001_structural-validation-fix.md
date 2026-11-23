@@ -8,7 +8,7 @@
 | Date | 2026-11-23 |
 | Classification | Non-blocking upstream implementation gap; not one of TASK-07 blocking points 1–5 |
 | Ownership | TASK-02 §3.1A/NET-03 semantics; TASK-06 service enforcement; TASK-07 §7.4/§9.4 wording now truthful |
-| Verification | `405 passed in 55.59s` (baseline 316 + 78 new unit + 11 new PostgreSQL integration tests); `ruff check` and `ruff format --check` clean |
+| Verification | `466 passed` (baseline 316 + 78 new unit + 12 new PostgreSQL integration tests + 60 TASK-07 schema tests from step 2); `ruff check` and `ruff format --check` clean |
 | Frozen artifacts | Unchanged; no file under `contracts/reference/**`, no DOCX, no continuation package |
 
 ## 1. Problem closed
@@ -16,7 +16,7 @@
 Two normative TASK-02 structural rules were documented and present in reference/engine helpers but were not enforced by the TASK-06 mutation services:
 
 1. **MDI/MDI-X cable matrix** — `add_connection` checked only the `cable_type` enum, endpoint distinctness and membership; it never derived device MDI classes, so physically invalid links were stored.
-2. **IPv4 exclusion policy** — `ipv4_to_int` checked only dotted-decimal syntax, while `configure_interface_ipv4`, `set_host_gateway` and `add_static_route` never invoked the engine's `host_address_problem`, `gateway_problem` or `next_hop_problem`. Excluded ranges, network/directed-broadcast addresses and limited broadcast were accepted.
+2. **IPv4 exclusion policy** — `ipv4_to_int` checked only dotted-decimal syntax, while `configure_interface_ipv4`, `set_host_gateway`, `add_static_route` and `edit_static_route` never invoked the engine's `host_address_problem`, `gateway_problem` or `next_hop_problem`. Excluded ranges, network/directed-broadcast addresses and limited broadcast were accepted.
 
 ## 2. Changes made
 
@@ -37,23 +37,24 @@ Pure helpers, no simulation logic:
 | `configure_interface_ipv4` | `validate_host_address` before conversion | `ContractValidationError` (422) |
 | `set_host_gateway` | `validate_special_address(..., role="gateway")` | `ContractValidationError` (422) |
 | `add_static_route` | `validate_special_address(..., role="next_hop")`; `0.0.0.0/0` destination still valid | `ContractValidationError` (422) |
+| `edit_static_route` | same next-hop guard when `next_hop_ipv4` is supplied, so editing cannot bypass the creation rule | `ContractValidationError` (422) |
 
-All guards execute after the project row is locked and before mutation, so rejection advances no revision and commits nothing.
+All guards execute before mutation, so rejection advances no revision and commits nothing. The route-edit guard runs before the project row is locked; the others run inside the locked transaction.
 
 ### Tests
 
 - `tests/unit/test_project_validation.py` — 78 tests: 4 MDI classes, all 36 kind-pair/cable combinations, excluded ranges, network/broadcast, default-allow ranges, non-ASCII digits, gateway/next-hop roles.
-- `tests/integration/db/test_mutation_validation.py` — 11 PostgreSQL-backed tests: incompatible cable rejected with no connection row and no revision advance, compatible/generic cables accepted, invalid host addresses rejected with no configuration change, limited-broadcast gateway rejected, excluded next hop rejected while a valid default route is accepted.
+- `tests/integration/db/test_mutation_validation.py` — 12 PostgreSQL-backed tests: incompatible cable rejected with no connection row and no revision advance, compatible/generic cables accepted, invalid host addresses rejected with no configuration change, limited-broadcast gateway rejected, excluded next hop rejected on both creation and edit while a valid default route is accepted.
 
 ## 3. Acceptance evidence
 
 - Baseline preserved: all pre-existing 316 tests still pass.
-- New total: **405 passed in 55.59s**.
+- Total after the route-edit gap fix: **466 passed**.
 - Lint/format: clean for all changed Python files.
 - Frozen reference artifacts byte-identical; `git status` shows only the service modification and new untracked validation/tests/docs files.
 
 ## 4. Boundaries
 
 - No Task 7 API router, Pydantic envelope, ETag guard, Ping adapter or OpenAPI snapshot was added by this record.
-- No commit, branch or PR was created.
+- No commit, branch or PR was created by this implementation record itself; the later owner-approved branch push and PR #10 are separate actions.
 - The TASK-07 draft §7.4/§9.4 wording is now accurate without amendment; no DOCX was edited.

@@ -13,6 +13,7 @@ from app.modules.projects.service import (
     add_static_route,
     configure_interface_ipv4,
     create_project,
+    edit_static_route,
     set_host_gateway,
 )
 
@@ -189,3 +190,34 @@ def test_excluded_next_hop_is_rejected_and_default_route_stays_valid(session):
         )
         == 1
     )
+
+
+def test_excluded_next_hop_is_rejected_on_route_edit(session):
+    project, devices, _interfaces = _project_with_devices(session, ["ROUTER"])
+    router_id = devices[0].device_id
+    add_static_route(
+        session,
+        project.project_id,
+        router_device_id=router_id,
+        destination_network="0.0.0.0",
+        prefix_length=0,
+        next_hop_ipv4="192.168.10.2",
+    )
+    session.commit()
+    route = session.scalars(
+        select(StaticRoute).where(StaticRoute.project_id == project.project_id)
+    ).one()
+    original_next_hop = route.next_hop_ipv4
+    before = project.state_revision
+
+    with pytest.raises(ContractValidationError):
+        edit_static_route(
+            session,
+            project.project_id,
+            route_id=route.route_id,
+            next_hop_ipv4="127.0.0.1",
+        )
+    session.rollback()
+
+    assert project.state_revision == before
+    assert session.get(StaticRoute, route.route_id).next_hop_ipv4 == original_next_hop
