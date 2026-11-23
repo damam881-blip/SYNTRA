@@ -31,6 +31,18 @@ EXPECTED_ROUTES = {
 }
 
 
+QUERY_ROUTES = {
+    ("GET", "/api/v1/projects"),
+    ("GET", "/api/v1/projects/{project_id}/revisions"),
+    ("GET", "/api/v1/projects/{project_id}/checkpoints"),
+    ("GET", "/api/v1/projects/{project_id}/devices"),
+    ("GET", "/api/v1/projects/{project_id}/devices/{device_id}"),
+    ("GET", "/api/v1/projects/{project_id}/interfaces"),
+    ("GET", "/api/v1/projects/{project_id}/connections"),
+    ("GET", "/api/v1/projects/{project_id}/static-routes"),
+}
+
+
 def _openapi_operations() -> dict[tuple[str, str], str]:
     """Resolve mounted operations through OpenAPI.
 
@@ -50,16 +62,22 @@ def test_all_step4_routes_are_mounted_under_api_v1():
     assert EXPECTED_ROUTES <= set(_openapi_operations())
 
 
+def test_step6_query_routes_are_mounted():
+    assert QUERY_ROUTES <= set(_openapi_operations())
+
+
 def test_health_endpoint_is_preserved():
     assert ("GET", "/health") in _openapi_operations()
 
 
 def test_deferred_endpoints_are_not_mounted_yet():
     mounted = set(_openapi_operations())
-    # Query projections (step 6) and Ping (step 7) arrive in later steps.
-    assert ("GET", "/api/v1/projects") not in mounted
+    # Ping endpoints (step 7) arrive in a later step.
     assert ("POST", "/api/v1/projects/{project_id}/ping-tests") not in mounted
-    assert ("GET", "/api/v1/projects/{project_id}/revisions") not in mounted
+    assert (
+        "GET",
+        "/api/v1/projects/{project_id}/ping-tests/{test_id}",
+    ) not in mounted
 
 
 def test_operation_ids_are_unique_and_named():
@@ -68,12 +86,14 @@ def test_operation_ids_are_unique_and_named():
         for key, operation_id in _openapi_operations().items()
         if key[1].startswith("/api/v1")
     }
-    assert len(operations) == len(EXPECTED_ROUTES)
+    assert len(operations) == len(EXPECTED_ROUTES) + len(QUERY_ROUTES)
     operation_ids = list(operations.values())
     assert len(set(operation_ids)) == len(operation_ids)
     assert "createProject" in operation_ids
     assert "openProject" in operation_ids
     assert "deleteProject" in operation_ids
+    assert "listProjects" in operation_ids
+    assert "getDevice" in operation_ids
 
 
 # --- DevicePositionRequest (§7.2: PATCH position body is {position:{x,y,z}}) ---

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
-from app.api.v1 import connections, devices, interfaces, projects, static_routes
+from app.api.v1 import connections, devices, interfaces, projects, queries, static_routes
 
 api_v1_router = APIRouter()
 api_v1_router.include_router(projects.router)
@@ -17,3 +17,4 @@ api_v1_router.include_router(devices.router)
 api_v1_router.include_router(interfaces.router)
 api_v1_router.include_router(connections.router)
 api_v1_router.include_router(static_routes.router)
+api_v1_router.include_router(queries.router)

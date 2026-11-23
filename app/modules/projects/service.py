@@ -1125,10 +1125,27 @@ def list_revisions(session: Session, project_id: uuid.UUID | str) -> list[Projec
     )
 
 
+def list_projects(session: Session, *, limit: int = 50, offset: int = 0) -> list[Project]:
+    """Bounded read-only project query (TASK-07 D7-07).
+
+    Returns project rows in stable creation order without touching child
+    collections or any lifecycle rule; callers render summaries only.
+    """
+    return list(
+        session.scalars(
+            select(Project)
+            .order_by(Project.created_at, Project.project_id)
+            .limit(limit)
+            .offset(offset)
+        )
+    )
+
+
 __all__ = [
     "Position",
     "create_project",
     "open_project",
+    "list_projects",
     "save_project",
     "list_checkpoints",
     "rename_device",

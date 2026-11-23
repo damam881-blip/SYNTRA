@@ -132,6 +132,23 @@ CheckpointReceiptEnvelope = ApiEnvelope[CheckpointReceipt]
 DeletionReceiptEnvelope = ApiEnvelope[DeletionReceipt]
 
 
+class ProjectSummary(StrictModel):
+    """List-view projection (§7.1, D7-07): no child collections, no counters."""
+
+    project_id: UUIDv7
+    name: str
+    description: str | None = None
+    state_revision: int
+    simulation_revision: int
+    created_at: str
+    updated_at: str
+
+
+ProjectListEnvelope = ApiEnvelope[list[ProjectSummary]]
+CollectionEnvelope = ApiEnvelope[list[CanonicalDocument]]
+DeviceEnvelope = ApiEnvelope[CanonicalDocument]
+
+
 # ---------------------------------------------------------------------------
 # Request DTOs — §7 endpoint payloads and §11.2 shape draft
 # ---------------------------------------------------------------------------

@@ -9,6 +9,7 @@ exact configuration that produced them even after the project changes again.
 from __future__ import annotations
 
 import uuid
+from copy import deepcopy
 from typing import Any
 
 from sqlalchemy.orm import Session
@@ -82,5 +83,5 @@ def replay_input(snapshot: SnapshotRef) -> dict[str, Any]:
         "base_simulation_revision": snapshot.base_simulation_revision,
         "schema_version": snapshot.schema_version,
         "configuration_digest": snapshot.configuration_digest,
-        "configuration": snapshot.configuration_json,
+        "configuration": deepcopy(snapshot.configuration_json),
     }
