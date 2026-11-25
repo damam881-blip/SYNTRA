@@ -34,6 +34,9 @@ models/
 !app/db/models/**
 app/db/models/__pycache__/
 
+# Local development database (scripts/dev_db.py)
+.pgdata/
+
 # Logs
 *.log
 logs/
